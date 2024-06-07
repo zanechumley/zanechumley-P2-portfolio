@@ -2,6 +2,86 @@
 title: "About me"
 ---
 
-Add some text and a figure describing myself.
+# Portrait
+<center>
+<img src="ZaneChumley.png">
+<p>Zane Chumley</p>
+</center>
 
-For details, see the exercise instructions. 
+# Professional Biography:
+
+Thirty-plus (30+) years business professional performing Supervisor-, Manager-, Director-, and Executive-level experience with keen focuses on optimizing internal quality and attaining peak operational efficiency tailored to current and emerging enterprise scale factors.
+
+# Career Highlights:
+
+-   **General Manager**, The Adept Group
+
+-   **Director of Operations**, The Tracking Corporation
+
+-   **Lead Quality Analyst**, Gallagher Wipro Solutions
+
+-   **Lead Requirements Analyst**, Unisys Space Systems
+
+# Programming Languages:
+
+-   SQL *(MSSQL, Oracle, and PROC SQL dialects)*
+
+-   Python *(and Anaconda platform)*
+
+-   R *(and RStudio platform)*
+
+-   XML
+
+-   Visual Basic
+
+-   HTML
+
+-   Pascal
+
+-   COBOL
+
+# Data Analysis Highlights:
+
+-   **Consultant**, Counsel for the Defense, Belcher, et. al., vs. Shoney's, Inc. ("Belcher I") ; Belcher, et. al., vs. Shoney's Inc. ("Belcher II"); Griffin, et. al., vs. Shoney's
+
+-   **Analyst**, SIM Card Data Usage
+
+-   **Analyst**, Call Center Transactional Costs
+
+# Formal Education:
+
+-   **Bachelor of Arts**, Abilene Christian University
+
+-   **Masters in Business Administration**, University of Texas at San Antonio
+
+-   **Masters of Science in Data Analytics**, University of Texas at San Antonio (Candidate)
+
+# Research Interests:
+
+-  Economics
+
+-  Volunteerism
+
+-  Sustainability
+
+-  Philanthropy
+
+# Fun Facts:
+
+-   *(Slightly)* older than UTSA
+
+-   On assignment at KSC for Space Shuttle Columbia launch (mission STS-55)
+
+-  Backup Singer *(uncredited)*, R.I.O.T. (Righteous Invasion of Truth), Carman, Sparrow Records
+
+-  Keyboardist, Ally Brooke (Fifth Harmony) <a target="OnMyKnees" href="https://www.youtube.com/watch?v=HdE63jghaKI">On My Knees</a> (Yes, I'm the Long Blond-Haired Muppet-like creature in the background)
+
+-  Once was enough: <a target="Skydive" href="https://www.youtube.com/watch?v=-vY_9-gmr1A">Skydive</a>
+
+# Obligatory Link:
+
+<a href="https://www.kaggle.com/datasets/paultimothymooney/stock-market-data" target="StockMarket">Stock Market Data</a>
+<p></p>
+<p>
+Following receipt of my **MSDA** degree, I intend to launch a **conglomerate**, the first operational unit of which will be an *Investor's Club*.  Mining historical stock market data will be a cornerstone activity contributing to the success of the *Club*.
+</p>

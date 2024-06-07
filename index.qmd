@@ -1,15 +1,34 @@
 ---
-title: "My website and data analysis portfolio"
+title: "Zane Chumley's website and data analysis portfolio"
 ---
 
-# Hello
+## Hello, Fellow Roadrunners!
 
-### And hello again
+Welcome to **my website** and *data analysis portfolio.*
 
-Welcome to **my website** and _data analysis portfolio._ 
+-   Thank you for your interest.
+-   Please use the `Menu Bar` above to look around.
+-  This is an **evolving** website, so feel free to check back often!
 
+## Origin
 
-* Please use the `Menu Bar` above to look around.
-* Have fun!
+### Birthplace:
 
-**Feel free to change this text any way you want 😁!**
+-  Texas City, Texas
+
+### Grew up in:
+
+-   Clear Lake City (Houston neighborhood)
+-   Taylor Lake Village (Houston Metro area)
+
+### Additional Residences:
+
+-   Denton, Texas
+-   Abilene, Texas
+-   Friendswood, Texas
+-   Nashville, Tennessee
+-   Mechanicsburg, Pennsylvania
+-   Dallas, Texas
+-   Garland, Texas
+-   San Antonio, Texas (current)
+
