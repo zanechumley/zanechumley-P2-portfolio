@@ -41,6 +41,8 @@ _Provide enough background on your topic that others can understand the why and 
 ## Description of data and data source
 _Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
 
+I added two (2) columns to exampledata.xslx to form exampledata2.xslx.  These columns were "BMI" (body mass index) and "Race" (from the list of races used in the 2020 US Census).
+
 ## Questions/Hypotheses to be addressed
 _State the research questions you plan to answer with this analysis._
 

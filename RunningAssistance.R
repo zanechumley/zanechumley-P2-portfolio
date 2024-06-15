@@ -7,4 +7,11 @@
 # Go Roadrunners!
 #
 # Install packages as needed
-install.packages("skimr")
+#install.packages("skimr")
+#install.packages('DSAIDE')
+
+# Load libraries as needed
+library('DSAIDE')
+
+# Open the DSAIDE menu
+dsaidemenu()
