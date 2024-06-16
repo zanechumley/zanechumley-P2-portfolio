@@ -40,9 +40,11 @@ Load the data.
 
 ```{r}
 #Path to data. Note the use of the here() package and not absolute paths
-data_location <- here::here("starter-analysis-exercise","data","processed-data","processeddata.rds")
+data_location <- here::here("starter-analysis-exercise","data","processed-data","processeddata2.rds")
 #load data
 mydata <- readRDS(data_location)
+# Check column names
+colnames(mydata)
 ```
 
 
@@ -75,7 +77,7 @@ Height first.
 p1 <- mydata %>% ggplot(aes(x=Height)) + geom_histogram() 
 plot(p1)
 figure_file = here("starter-analysis-exercise","results","figures","height-distribution.png")
-ggsave(filename = figure_file, plot=p1) 
+ggsave(filename = figure_file, plot=p1)  
 ```
 
 Now weights.
@@ -105,6 +107,26 @@ figure_file = here("starter-analysis-exercise","results","figures","height-weigh
 ggsave(filename = figure_file, plot=p4) 
 ```
 
+
+
+```{r}
+p5 <- mydata %>% ggplot(aes(x = Weight, y = BMI)) + geom_point() + geom_smooth(method = 'lm')
+plot(p5)
+figure_file <- here::here("starter-analysis-exercise","results","figures","weight-bmi.png")
+ggsave(filename = figure_file, plot = p5) 
+```
+
+
+```{r}
+p6 <- mydata %>%
+  ggplot(aes(x = Race, y = Height)) +
+  geom_bar(stat = "summary", fun = "mean") +  
+  labs(title = "Height by Race", x = "Race", y = "Height") +
+  theme_minimal() 
+figure_file <- here::here("starter-analysis-exercise", "results", "figures", "mean-height-by-race.png")
+ggsave(filename = figure_file, plot = p6)
+print(p6)
+```
 
 
 # Notes
