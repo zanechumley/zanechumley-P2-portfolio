@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Your Name">
-<meta name="dcterms.date" content="2024-06-07">
+<meta name="author" content="Zane Chumley">
+<meta name="dcterms.date" content="2024-06-18">
 
-<title>YOURNAME Data Analysis Portfolio - Manuscript/Report Template for a Data Analysis Project</title>
+<title>Zane Chumley Data Analysis Portfolio - Zane’s Starter Analysis Exercise</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -101,7 +101,7 @@ div.csl-indent {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../../index.html">
-    <span class="navbar-title">YOURNAME Data Analysis Portfolio</span>
+    <span class="navbar-title">Zane Chumley Data Analysis Portfolio</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -140,7 +140,7 @@ div.csl-indent {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../../../URL-TO-THIS-REPOSITORY-HERE"> <i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/zanechumley/zanechumley-P2-portfolio"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -161,7 +161,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Manuscript/Report Template for a Data Analysis Project</h1>
+<h1 class="title">Zane’s Starter Analysis Exercise</h1>
 </div>
 
 
@@ -171,14 +171,14 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Your Name </p>
+             <p>Zane Chumley </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 7, 2024</p>
+      <p class="date">June 18, 2024</p>
     </div>
   </div>
   
@@ -190,6 +190,7 @@ div.csl-indent {
 </header>
 
 
+<p>VINAYAK REVISANKER contributed to this exercise</p>
 <p>The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. You don’t need to have exactly these sections, but the content covering those sections should be addressed.</p>
 <p>This uses MS Word as output format. <a href="https://quarto.org/docs/output-formats/ms-word.html">See here</a> for more information. You can switch to other formats, like html or pdf. See <a href="https://quarto.org/">the Quarto documentation</a> for other formats.</p>
 <section id="summaryabstract" class="level1" data-number="1">
@@ -206,6 +207,7 @@ div.csl-indent {
 <section id="description-of-data-and-data-source" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="description-of-data-and-data-source"><span class="header-section-number">2.2</span> Description of data and data source</h2>
 <p><em>Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section.</em></p>
+<p>I added two (2) columns to exampledata.xslx to form exampledata2.xslx. These columns were “BMI” (body mass index) and “Race” (from the list of races used in the 2020 US Census).</p>
 </section>
 <section id="questionshypotheses-to-be-addressed" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="questionshypotheses-to-be-addressed"><span class="header-section-number">2.3</span> Questions/Hypotheses to be addressed</h2>
@@ -247,23 +249,28 @@ Table&nbsp;1: Data summary table.
 </figcaption>
 <div aria-describedby="tbl-summarytable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <colgroup>
+<col style="width: 3%">
 <col style="width: 5%">
+<col style="width: 3%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 6%">
 <col style="width: 7%">
 <col style="width: 5%">
-<col style="width: 7%">
-<col style="width: 7%">
-<col style="width: 8%">
-<col style="width: 9%">
-<col style="width: 6%">
-<col style="width: 5%">
 <col style="width: 5%">
 <col style="width: 6%">
-<col style="width: 6%">
-<col style="width: 6%">
-<col style="width: 6%">
-<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -271,6 +278,11 @@ Table&nbsp;1: Data summary table.
 <th style="text-align: left;">skim_variable</th>
 <th style="text-align: right;">n_missing</th>
 <th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">character.min</th>
+<th style="text-align: right;">character.max</th>
+<th style="text-align: right;">character.empty</th>
+<th style="text-align: right;">character.n_unique</th>
+<th style="text-align: right;">character.whitespace</th>
 <th style="text-align: left;">factor.ordered</th>
 <th style="text-align: right;">factor.n_unique</th>
 <th style="text-align: left;">factor.top_counts</th>
@@ -286,13 +298,18 @@ Table&nbsp;1: Data summary table.
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">factor</td>
-<td style="text-align: left;">Gender</td>
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">Race</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">M: 4, F: 3, O: 2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
 <td style="text-align: right;">NA</td>
 <td style="text-align: right;">NA</td>
 <td style="text-align: right;">NA</td>
@@ -303,38 +320,92 @@ Table&nbsp;1: Data summary table.
 <td style="text-align: left;">NA</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">Gender</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">F: 5, M: 4, O: 2</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">numeric</td>
 <td style="text-align: left;">Height</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
 <td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
-<td style="text-align: right;">165.66667</td>
-<td style="text-align: right;">15.97655</td>
-<td style="text-align: right;">133</td>
-<td style="text-align: right;">156</td>
-<td style="text-align: right;">166</td>
-<td style="text-align: right;">178</td>
-<td style="text-align: right;">183</td>
-<td style="text-align: left;">▂▁▃▃▇</td>
+<td style="text-align: right;">156.00000</td>
+<td style="text-align: right;">34.899857</td>
+<td style="text-align: right;">60.0</td>
+<td style="text-align: right;">155.00</td>
+<td style="text-align: right;">166.0</td>
+<td style="text-align: right;">176.50</td>
+<td style="text-align: right;">183.0</td>
+<td style="text-align: left;">▁▁▁▂▇</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">numeric</td>
 <td style="text-align: left;">Weight</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
 <td style="text-align: right;">NA</td>
 <td style="text-align: left;">NA</td>
-<td style="text-align: right;">70.11111</td>
-<td style="text-align: right;">21.24526</td>
-<td style="text-align: right;">45</td>
-<td style="text-align: right;">55</td>
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">80</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">▇▂▃▂▂</td>
+<td style="text-align: right;">62.81818</td>
+<td style="text-align: right;">28.361305</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">52.50</td>
+<td style="text-align: right;">60.0</td>
+<td style="text-align: right;">78.00</td>
+<td style="text-align: right;">110.0</td>
+<td style="text-align: left;">▂▁▇▅▃</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">BMI</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">24.79091</td>
+<td style="text-align: right;">7.350708</td>
+<td style="text-align: right;">15.9</td>
+<td style="text-align: right;">20.55</td>
+<td style="text-align: right;">23.4</td>
+<td style="text-align: right;">25.05</td>
+<td style="text-align: right;">39.9</td>
+<td style="text-align: left;">▃▇▁▁▂</td>
 </tr>
 </tbody>
 </table>
@@ -362,6 +433,39 @@ Figure&nbsp;1: Height and weight stratified by gender.
 </div>
 </div>
 </div>
+<p><span class="citation" data-cites="bmi-dist">(<a href="#ref-bmi-dist" role="doc-biblioref"><strong>bmi-dist?</strong></a>)</span> shows a bar graph of Body Mass Index (BMI) distribution.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../results/figures/bmi-distribution.png" class="img-fluid figure-img" width="1094"></p>
+<figcaption>Body Mass Index (BMI) distribution.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><span class="citation" data-cites="mean-height-race">(<a href="#ref-mean-height-race" role="doc-biblioref"><strong>mean-height-race?</strong></a>)</span> shows a bar graph of the average height by race.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../results/figures/mean-height-by-race.png" class="img-fluid figure-img" width="1050"></p>
+<figcaption>Average Height by Race.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><span class="citation" data-cites="weight-bmi">(<a href="#ref-weight-bmi" role="doc-biblioref"><strong>weight-bmi?</strong></a>)</span> shows a scatterplot of weight and BMI.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../results/figures/weight-bmi.png" class="img-fluid figure-img" width="1050"></p>
+<figcaption>Distribution of Weight and BMI.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="full-analysis" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="full-analysis"><span class="header-section-number">4.3</span> Full analysis</h2>
@@ -375,7 +479,62 @@ Table&nbsp;2: Linear model fit table.
 </figcaption>
 <div aria-describedby="tbl-resulttable2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">149.2726967</td>
+<td style="text-align: right;">23.3823360</td>
+<td style="text-align: right;">6.3839942</td>
+<td style="text-align: right;">0.0013962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Weight</td>
+<td style="text-align: right;">0.2623972</td>
+<td style="text-align: right;">0.3512436</td>
+<td style="text-align: right;">0.7470519</td>
+<td style="text-align: right;">0.4886517</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GenderM</td>
+<td style="text-align: right;">-2.1244913</td>
+<td style="text-align: right;">15.5488953</td>
+<td style="text-align: right;">-0.1366329</td>
+<td style="text-align: right;">0.8966520</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GenderO</td>
+<td style="text-align: right;">-4.7644739</td>
+<td style="text-align: right;">19.0114155</td>
+<td style="text-align: right;">-0.2506112</td>
+<td style="text-align: right;">0.8120871</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-resulttable3" class="quarto-xref">Table&nbsp;3</a> shows a linear model with Height as the outcome and ShoeSize and EyeColor as the predictors.</p>
+<div class="cell">
+<div id="tbl-resulttable3" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-resulttable3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Linear model fit table.
+</figcaption>
+<div aria-describedby="tbl-resulttable3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>

@@ -8,13 +8,13 @@ Welcome to **my website** and *data analysis portfolio.*
 
 -   Thank you for your interest.
 -   Please use the `Menu Bar` above to look around.
--  This is an **evolving** website, so feel free to check back often!
+-   This is an **evolving** website, so feel free to check back often!
 
 ## Origin
 
 ### Birthplace:
 
--  Texas City, Texas
+-   Texas City, Texas
 
 ### Grew up in:
 
@@ -31,4 +31,3 @@ Welcome to **my website** and *data analysis portfolio.*
 -   Dallas, Texas
 -   Garland, Texas
 -   San Antonio, Texas (current)
-
