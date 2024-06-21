@@ -1,5 +1,240 @@
 ---
 title: "R Coding Exercise"
+author: "Zane Chumley"
+date: "2024-06-21"
+output: html_document
 ---
 
-Placeholder file for the future R coding exercise.
+# Assignment #3: Coding Basics
+
+## Startup
+
+### Identification
+
+```{r}
+# DA 6833 02T
+# Summer 2024
+# School of Data Science
+# University of Texas at San Antonio
+
+# Zane Chumley
+# Banner ID: @01318598
+# UTSAid: wgs999
+```
+
+### Load Libraries as Needed
+
+```{r}
+library(readxl) #for loading Excel files
+library(dplyr) #for data processing/cleaning
+library(tidyr) #for data processing/cleaning
+library(skimr) #for nice visualization of data 
+library(here) #to set paths
+library(dslabs) #for data used in this assignment
+```
+
+### Load and explore 'gapminder' dataset
+
+```{r}
+# review help file for gapminder dataset
+# after the 20th time, opening this file just got excessively and needlessly annoying
+# help(gapminder)
+
+# assign dataset to internal variable
+A03 <- gapminder 
+
+# look at the data's structure
+str(A03)
+
+# look at a summary of the data
+summary(A03)
+
+# look at the data's type
+class(A03)
+```
+
+## Processing data
+
+### African continent data
+
+```{r}
+# create new data.frame with African data only
+A03.africadata <- A03[A03$continent=="Africa",]
+
+# look at the subset's structure
+str(A03.africadata)
+
+# look at a summary of the subset
+summary(A03.africadata)
+```
+
+### African continent data - just Infant mortality and Life expectancy 
+
+```{r}
+#Create new African data.frame with only infant mortality and life expectancy
+A03.africadata.infantlife <- A03.africadata[, c('infant_mortality', 'life_expectancy')]
+
+# look at the subset's structure
+str(A03.africadata.infantlife)
+
+# look at a summary of the subset
+summary(A03.africadata.infantlife)
+```
+
+### African continent data - just Population and Life expectancy 
+
+```{r}
+#Create new African data.frame with only Population and life expectancy
+A03.africadata.poplife <- A03.africadata[, c('population', 'life_expectancy')]
+
+# look at the subset's structure
+str(A03.africadata.poplife)
+
+# look at a summary of the subset
+summary(A03.africadata.poplife)
+```
+
+## Plotting Data
+
+### Infant Mortality and Life Expectancy
+
+```{r}
+# Life expectancy as a function of infant mortality
+plot(life_expectancy~infant_mortality
+     , data=A03.africadata.infantlife
+     , main="Africa: Infant Mortality and Life Expectancy"
+     , xlab="Infant Mortality"
+     , ylab="Life Expectancy"
+     )
+```
+
+### Population and Life Expectancy
+
+```{r}
+# Life expectancy as a function of population size
+plot(life_expectancy~population
+     , data=A03.africadata.poplife
+     , main="Africa: Population and Life Expectancy"
+     , xlab="Population Size"
+     , log="x"
+     , ylab="Life Expectancy"
+     )
+```
+
+## More data processing
+
+### Identifying African data with missing values for infant mortality
+
+```{r}
+# Get African rows with missing values for infant mortality
+A03.africadata.noinfants <-  A03.africadata[A03.africadata$infant_mortality=="NA",]
+
+# look at the subset's structure
+str(A03.africadata.noinfants)
+
+# look at a summary of the subset
+summary(A03.africadata.noinfants)
+
+# This is not good ... all the values are "NA", not just those for $infant_mortality
+```
+
+### Identify years where infant mortality is missing from African data
+
+Garbage in, garbage out ... all the $year values are inexplicably "NA"
+
+```{r}
+# Which years of African data are missing infant mortality rates?
+A03.africadata.noinfants.years <- table(A03.africadata.noinfants$year)
+
+# look at the subset's structure
+str(A03.africadata.noinfants.years)
+
+# look at a summary of the subset
+summary(A03.africadata.noinfants.years)
+```
+
+### We will focus on the year 2000
+
+```{r}
+# Get African rows for the year 2000
+A03.africadata.Y2K <-  A03.africadata[A03.africadata$year=="2000",]
+
+# look at the subset's structure
+str(A03.africadata.Y2K)
+
+# look at a summary of the subset
+summary(A03.africadata.Y2K)
+```
+
+## More Plotting Data
+
+### Infant Mortality and Life Expectancy - Year 2000
+
+```{r}
+# Life expectancy as a function of infant mortality
+plot(life_expectancy~infant_mortality
+     , data=A03.africadata.Y2K
+     , main="Africa 2000: Infant Mortality and Life Expectancy"
+     , xlab="Infant Mortality"
+     , ylab="Life Expectancy"
+     )
+```
+
+### Population and Life Expectancy - Year 2000
+
+```{r}
+# Life expectancy as a function of population size
+plot(life_expectancy~population
+     , data=A03.africadata.Y2K
+     , main="Africa 2000: Population and Life Expectancy"
+     , xlab="Population Size"
+     , log="x"
+     , ylab="Life Expectancy"
+     )
+```
+
+## Simple model fits - Africa 2000
+
+### Fitting the models
+
+```{r}
+# Fit life expectancy as the outcome, and infant mortality as the predictor.
+A03.fit1 <- lm(life_expectancy~infant_mortality
+               , data=A03.africadata.Y2K
+               )
+# Fit life expectancy as the outcome, and population as the predictor.
+A03.fit2 <- lm(life_expectancy~population
+               , data=A03.africadata.Y2K
+               )
+```
+
+### Examining the summaries for the models
+
+```{r}
+# Summary where infant mortality is the predictor
+summary(A03.fit1)
+# Summary where population is the predictor
+summary(A03.fit2)
+```
+
+### Drawing conclusions about the models
+
+Regarding Infant Mortality:
+
++ Our NULL hypothesis is that infant mortality is not a predictor of life expectancy.
++ Our alternative hypothesis is that infant mortality is a predictor.
+
+Given the p-value of 2.826e-08 is well below all typical significance levels of 0.10, 0.05, and 0.01, we can reject the NULL hypothesis and conclude infant mortality is a predictor of life expectancy.
+
+Regarding Population:
+
++ Our NULL hypothesis is that population is not a predictor of life expectancy.
++ Our alternative hypothesis is that population is a predictor.
+
+Given the p-value of 0.6159 is well above  all typical significance levels of 0.10, 0.05, and 0.01, we fail to reject the NULL hypothesis and conclude population is not a predictor of life expectancy.
+
+# Assignment 3 Concluded
+
+```{r}
+# Go Roadrunners!
+```
