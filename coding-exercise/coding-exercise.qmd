@@ -233,8 +233,175 @@ Regarding Population:
 
 Given the p-value of 0.6159 is well above  all typical significance levels of 0.10, 0.05, and 0.01, we fail to reject the NULL hypothesis and conclude population is not a predictor of life expectancy.
 
-# Assignment 3 Concluded
+# This section contributed by Sean O'Sullivan
 
 ```{r}
-# Go Roadrunners!
+# load and install necessary packages for notebook
+pacman::p_load(dslabs,
+               ggthemes,
+               skimr,
+               tidyverse,
+               patchwork,
+               randomForest,
+               caTools)
+movies <- data.frame(movielens)
 ```
+
+## Movie Rating Distribution
+
+```{r}
+# create a histogram of ratings distribution
+p3 <- movielens %>%
+        ggplot(aes(x = rating)) +
+        geom_histogram(fill = "coral3", bins = 10) +
+        geom_vline(xintercept = mean(movielens$rating),
+                   color = "coral",
+                   linetype = 2) +
+        geom_text(aes(x = mean(movielens$rating) - .1,
+                      y = 25000,
+                      label = round(mean(movielens$rating), 2),
+                      angle = 90,
+                      color = "coral3")) +
+        ylab(NULL) + xlab("Rating") +
+        labs() +
+        theme_clean() + 
+        theme(plot.title = element_text(hjust = .5), legend.position = "none")
+p3
+```
+
+Taking a look at the histogram for ratings we observe that the data is left skewed with a mean rating of 3.54 out of 5. The most common rating being 4 out of 5. We would expect that movie quality more broadly likely follows a fairly normal distribution which makes this distribution of ratings interesting. This perhaps suggests that viewers motivated enough to leave a review tend to be those that view a movie more positively, while those that do not abstain from submitting a rating. 
+
+## Movie Ratings Through the Years
+
+```{r}
+# examining per year sample sizes to determine if there are some we should exclude from analysis
+movielens %>%
+  select(year) %>%
+  group_by(year) %>%
+  summarise(n = n())
+# years before 1930 had <30 movie ratings so we'll exclude them from analysis due to low sample size
+# create a time-series line graph of movie ratings
+p1a <- movielens %>%
+        select(year, rating) %>%
+        filter(year >= 1930) %>% 
+        group_by(year) %>%
+        summarise(avg_rating = mean(rating)) %>% 
+        ggplot(aes(x = year, y = avg_rating)) + 
+        theme_clean() + 
+        geom_line(color = "coral3", na.rm = TRUE) +
+        geom_vline(xintercept = 1995,
+                   color = "coral",
+                   linetype = 2) +
+        geom_text(aes(x = 1993,
+                      y = 3.8,
+                      label = "1995",
+                      angle = 90,
+                      color = "coral")) +
+        xlab("Year") + ylab("Avg. Movie Rating") +
+        theme(legend.position = "none")
+# create a time-series line graph of movie ratings
+p1btab <- movielens %>%
+        select(year, rating) %>%
+        filter(year >= 1930) %>% 
+        group_by(year) %>%
+        mutate(count = n())
+p1b <- p1btab %>% 
+        ggplot(aes(x = year, y = count)) + 
+        theme_clean() + 
+        geom_line(color = "coral3", na.rm = TRUE) +
+        geom_vline(xintercept = 1995,
+                   color = "coral",
+                   linetype = 2) +
+        geom_text(aes(x = 1993,
+                      y = 1000,
+                      label = "1995",
+                      angle = 90,
+                      color = "coral")) +
+        xlab("Year") + ylab("Number of Ratings") +
+        theme(legend.position = "none")
+wrap_plots(p1a, p1b, ncol = 1)
+```
+
+Taking a look at the average rating of movies by release year we can see that average ratings tend to be lower for more recent years. Additionally we see a trend towards less variance in average ratings the more recent the movie release year. Examining the count of movie ratings by release year we can see that there is a significant bias in ratings count for more recently released movies -- with a peak number of ratings for movies released in the year 1995. This may be a function of when the ability to rate movies became broadly available with those movies that were still fresh at the time receiving the highest number of overall ratings.
+
+```{r}
+# create a histogram of ratings distribution
+p3c <- movielens %>%
+        filter(year == 2000) %>% 
+        ggplot(aes(x = rating)) +
+        geom_histogram(fill = "coral3", bins = 10) +
+        geom_vline(xintercept = mean(movielens[which(movielens$year == 2000),]$rating),
+                   color = "coral",
+                   linetype = 2) +
+        geom_text(aes(x = mean(movielens[which(movielens$year == 2000),]$rating) - .2,
+                      y = 900,
+                      label = round(mean(movielens[which(movielens$year == 2000),]$rating), 2),
+                      angle = 90,
+                      color = "coral3")) +
+        ylab(NULL) + xlab("Rating") +
+        labs(title = "Released in 2000") +
+        theme_clean() + 
+        theme(plot.title = element_text(hjust = .5), legend.position = "none")
+p3b <- movielens %>%
+        filter(year == 1950) %>% 
+        ggplot(aes(x = rating)) +
+        geom_histogram(fill = "coral3", bins = 10) +
+        geom_vline(xintercept = mean(movielens[which(movielens$year == 1950),]$rating),
+                   color = "coral",
+                   linetype = 2) +
+        geom_text(aes(x = mean(movielens[which(movielens$year == 1950),]$rating) - .2,
+                      y = 90,
+                      label = round(mean(movielens[which(movielens$year == 1950),]$rating), 2),
+                      angle = 90,
+                      color = "coral3")) +
+        ylab(NULL) + xlab("Rating") +
+        labs(title = "Released in 1950") +
+        theme_clean() + 
+        theme(plot.title = element_text(hjust = .5), legend.position = "none")
+wrap_plots(p3b, p3c, ncol = 2)
+```
+
+Reexamining the distribution of ratings now that we understand there is a recency bias component, we can see that older films tend to be skewed significantly more than newer films with means farther from a neutral rating of 3. 
+
+## Best and Worst Movies
+
+```{r}
+# subset dataframe for best movies by average rating with >= 50 ratings
+bestmovies <- movielens %>%
+                select(title, year, rating) %>%
+                group_by(title) %>%
+                summarise(avg_rating = mean(rating), n = n()) %>%
+                filter(n >= 50) %>% 
+                arrange(desc(avg_rating)) %>% 
+                slice(1:10) %>%
+                mutate(type = "best")
+# subset dataframe for worst movies by average rating with >= 50 ratings
+worstmovies <- movielens %>%
+                select(title, year, rating) %>%
+                group_by(title) %>%
+                summarise(avg_rating = mean(rating), n = n()) %>%
+                filter(n >= 50) %>% 
+                arrange(avg_rating) %>% 
+                slice(1:10) %>%
+                mutate(type = "worst")
+# combined dataframe for barchart
+bestworst <- bind_rows(bestmovies, worstmovies)
+
+p2 <- bestworst %>% 
+  ggplot(aes(x = avg_rating, y = reorder(title, avg_rating), fill = type)) + 
+  geom_col(na.rm = TRUE) +
+  geom_text(aes(label = round(avg_rating, 2)),
+            size = 3,
+            fontface = "bold",
+            hjust = 1.25,
+            color = "white") +
+  scale_fill_manual(values = c("coral2", "aquamarine3")) +
+  ylab(NULL) + xlab("Avg. Rating") +
+  labs(title = "Best & Worst Rated Movies", caption = "For movies with >50 ratings") +
+  theme_clean() + 
+  theme(plot.title = element_text(hjust = .5), legend.position = "none")
+p2
+```
+
+
+Finally we examine the gulf that exists between the 10 highest- and lowest-rated films. For this analysis piece we focused solely on those movies with at least 50 or more ratings in order to exclude low sample size films of little note. With an average difference between the best and the worst rated movies of little over 1.5 stars we can see there exists a large disparity between highly- and lowly-rated movies. With many of the former camp being dramas and many of the latter camp falling under the umbrella of comedy. 
