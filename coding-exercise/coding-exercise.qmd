@@ -271,6 +271,8 @@ p3
 
 Taking a look at the histogram for ratings we observe that the data is left skewed with a mean rating of 3.54 out of 5. The most common rating being 4 out of 5. We would expect that movie quality more broadly likely follows a fairly normal distribution which makes this distribution of ratings interesting. This perhaps suggests that viewers motivated enough to leave a review tend to be those that view a movie more positively, while those that do not abstain from submitting a rating. 
 
+## Movie Ratings Through the Years
+
 ```{r}
 # examining per year sample sizes to determine if there are some we should exclude from analysis
 movielens %>%
@@ -361,6 +363,8 @@ wrap_plots(p3b, p3c, ncol = 2)
 
 Reexamining the distribution of ratings now that we understand there is a recency bias component, we can see that older films tend to be skewed significantly more than newer films with means farther from a neutral rating of 3. 
 
+## Best and Worst Movies
+
 ```{r}
 # subset dataframe for best movies by average rating with >= 50 ratings
 bestmovies <- movielens %>%
@@ -398,5 +402,6 @@ p2 <- bestworst %>%
   theme(plot.title = element_text(hjust = .5), legend.position = "none")
 p2
 ```
+
 
 Finally we examine the gulf that exists between the 10 highest- and lowest-rated films. For this analysis piece we focused solely on those movies with at least 50 or more ratings in order to exclude low sample size films of little note. With an average difference between the best and the worst rated movies of little over 1.5 stars we can see there exists a large disparity between highly- and lowly-rated movies. With many of the former camp being dramas and many of the latter camp falling under the umbrella of comedy. 
