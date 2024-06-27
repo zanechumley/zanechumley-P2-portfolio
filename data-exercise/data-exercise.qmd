@@ -1,0 +1,299 @@
+---
+title: "Data Exercise"
+author: "Zane Chumley"
+date: "2024-06-28"
+output: html_document
+---
+
+# Assignment 4: All About Data
+
+## Startup
+
+### Introduction
+
+```{r}
+# DA 6833 02T
+# Summer 2024
+# School of Data Science
+# University of Texas at San Antonio
+
+# Zane Chumley
+# Banner ID: @01318598
+# UTSAid: wgs999
+```
+
+### Install Packages as Needed
+
+```{r}
+# install.packages("simstudy")
+```
+
+### Load Libraries as Needed
+
+```{r}
+# library(readxl) #for loading Excel files
+# library(dplyr) #for data processing/cleaning
+# library(tidyr) #for data processing/cleaning
+library(tidyverse)
+# library(skimr) #for nice visualization of data 
+# library(here) #to set paths
+# library(dslabs) #for data used in this assignment
+library(tibble)
+library(simstudy)
+```
+
+## Selecting Option 2: Generate and explore synthetic data
+
+### Part One
+
+_Write code that generates a synthetic dataset. This dataset should have multiple variables, and there should be some associations between variables._
+
+```{r}
+# Make it reproducible
+set.seed(641)
+# Global Settings
+observations=500
+# Defining First Variable: x
+defined <- defData(varname="x"
+                   , formula=10
+                   , variance=1.3
+                   , dist="poisson"
+                   )
+# Defining Second Variable: y
+defined <- defData(defined
+                   , varname="y"
+                   , formula="3*(x-7)"
+                   , variance=1.5
+                   , dist="normal"
+                   )
+# Defining Third Variable: z
+defined <- defData(defined
+                   , varname="z"
+                   , formula="x*y/2"
+                   , variance=1.7
+                   , dist="normal"
+                   )
+# Now we will generate desired observations of the synthetic data.
+zaneata <- genData(observations
+             , defined
+             )
+# Finally, we will divide as evenly as possible the desired observations into seven (7) sections.
+zaneata <- trtAssign(zaneata
+               , nTrt = 7
+               , grpName = "section"
+               , balanced = TRUE
+               )
+# Now let's look at the first and last ten (10) observations of the data.
+head(zaneata,10)
+tail(zaneata,10)
+```
+
+### Part Two
+
+_Then write code that explores the data by making plots or tables to confirm that your synthetic data is what you expect it to be._
+
+```{r}
+# Let's get some basic information about the data generated.
+summary(zaneata$x)
+summary(zaneata$y)
+summary(zaneata$z)
+table(zaneata$section)
+```
+
+Now let's take a look at the three (3) variables by section.
+
+```{r}
+boxplot(zaneata$x~zaneata$section
+        , main="Boxplot of Variable x By section"
+        , xlab="section"
+        , ylab="x"
+        )
+boxplot(zaneata$y~zaneata$section
+        , main="Boxplot of Variable y By section"
+        , xlab="section"
+        , ylab="y"
+        )
+boxplot(zaneata$z~zaneata$section
+        , main="Boxplot of Variable z By section"
+        , xlab="section"
+        , ylab="z"
+        )
+```
+
+Next, let's get a qualitative idea at the relationships between the three (3) variables.  As we built y off of x and z off of both y and x, we will graph the following relationships:
+
++ y=f(x)
++ z=f(y)
++ z=f(x)
+
+```{r}
+# Scatterplots: 
+plot(zaneata$y~zaneata$x
+     , main="Variable y as a function of x"
+     , xlab="values of x"
+     , ylab="values of y"
+     )
+plot(zaneata$z~zaneata$y
+     , main="Variable z as a function of y"
+     , xlab="values of y"
+     , ylab="values of z"
+     )
+plot(zaneata$z~zaneata$x
+     , main="Variable z as a function of x"
+     , xlab="values of x"
+     , ylab="values of z"
+     )
+```
+
+All plots show a fairly strong relationship between the values on the axes of all three (3) plots.  This is not surprising, given that the synthetic data was derived primarily from previously-defined variables.
+
+Since the correlations are so strong, we'll introduce additional randomness in the values of all three (3) variables, and then we'll re-run the plots.  We'll base the degree of randomness on the third root of the range of the existing values, then allow a random value in the range to be either added or subtracted to the value.
+
+Finally, to further destabilize the data, we will round all three (3) variables to integers.
+
+```{r}
+#Calculate range of randomness for each variable
+xrange <- trunc((max(zaneata$x)-min(zaneata$x))^(1/3)+0.5)
+xrangedist=paste("Additional randomness of x will be between "
+                 , 0-xrange
+                 , " and "
+                 , xrange
+                 )
+print(xrangedist)
+yrange <- trunc((max(zaneata$y)-min(zaneata$y))^(1/3)+0.5)
+yrangedist=paste("Additional randomness of y will be between "
+                 , 0-yrange
+                 , " and "
+                 , yrange
+                 )
+print(yrangedist)
+zrange <- trunc((max(zaneata$z)-min(zaneata$z))^(1/3)+0.5)
+zrangedist=paste("Additional randomness of z will be between "
+                 , 0-zrange
+                 , " and "
+                 , zrange
+                 )
+print(zrangedist)
+# Add columns for updated variables
+zaneata <- add_column(zaneata, x2=1:500, .after="x")
+zaneata <- add_column(zaneata, y2=1:500, .after="y")
+zaneata <- add_column(zaneata, z2=1:500, .after="z")
+# Set ranges for sample function
+xsample <- c(-xrange:xrange)
+ysample <- c(-yrange:yrange)
+zsample <- c(-zrange:zrange)
+# Update the values based on newly-introduced randomness
+for (index in 1:observations)
+{
+  xrand <- sample(x=xsample
+                  , 1
+                  , replace = FALSE
+                  , prob = NULL
+                  )
+  yrand <- sample(ysample
+                  , 1
+                  , replace = FALSE
+                  , prob = NULL
+                  )
+  zrand <- sample(zsample
+                  , 1
+                  , replace = FALSE
+                  , prob = NULL
+                  )
+  zaneata[index,]$x2 <- trunc(zaneata[index,]$x + xrand + 0.5)
+  zaneata[index,]$y2 <- trunc(zaneata[index,]$y + yrand + 0.5)
+  zaneata[index,]$z2 <- trunc(zaneata[index,]$z + zrand + 0.5)
+}
+# Looking again at the first and last ten (10) observations of the data.
+head(zaneata,10)
+tail(zaneata,10)
+# Let's get some basic information about the destablized data.
+summary(zaneata$x2)
+summary(zaneata$y2)
+summary(zaneata$z2)
+```
+
+Now let's compare, side-by-side, the three (3) functions using both the original and the destabilized data.  Note that the axes on the side-by-side plots were not equalized, but set automatically based on each variable's range.
+
+```{r}
+#| label: yxfig
+#| layout-ncol: 2
+#| column: page
+plot(zaneata$y~zaneata$x
+     , main="Variable y as a function of x"
+     , xlab="values of x"
+     , ylab="values of y"
+     )
+plot(zaneata$y2~zaneata$x2
+     , main="Variable y2 as a function of x2"
+     , xlab="values of x2"
+     , ylab="values of y2"
+     )
+```
+
+```{r}
+#| label: zyfig
+#| layout-ncol: 2
+#| column: page
+plot(zaneata$z~zaneata$y
+     , main="Variable z as a function of y"
+     , xlab="values of y"
+     , ylab="values of z"
+     )
+plot(zaneata$z2~zaneata$y2
+     , main="Variable z2 as a function of y2"
+     , xlab="values of y2"
+     , ylab="values of z2"
+     )
+```
+
+```{r}
+#| label: zxfig
+#| layout-ncol: 2
+#| column: page
+plot(zaneata$z~zaneata$x
+     , main="Variable z as a function of x"
+     , xlab="values of x"
+     , ylab="values of z"
+     )
+plot(zaneata$z2~zaneata$x2
+     , main="Variable z2 as a function of x2"
+     , xlab="values of x2"
+     , ylab="values of z2"
+     )
+```
+
+Comparing the plots for the original and destabilized data of all three (3) functions, nontrivial instability has been introduced by the destablization.  Nonetheless, the correlation in all three (3) functions remains apparent. 
+
+### Part Three
+
+_Then fit a few simple models to the data. For instance, use the **lm** or **glm** functions to fit a linear or logistic model. Make sure your model can recover the associations you built into the data. Explore if and how different models might be able to capture the patterns you see._
+
+```{r}
+# Let's run general linear models on the three (3) functions listed above, comparing both the original and destabilized values.
+glm(y~x
+   ,data=zaneata
+   )
+glm(y2~x2
+   ,data=zaneata
+   )
+glm(z~y
+   ,data=zaneata
+   )
+glm(z2~y2
+   ,data=zaneata
+   )
+glm(z~x
+   ,data=zaneata
+   )
+glm(z2~x2
+   ,data=zaneata
+   )
+```
+
+When comparing the linear models between the original and destabilized versions of the data, all three (3) functions shared multiple characteristics:
+
++ The Null Deviance was always greater for the destabilized data than the original data, but only slightly so.
++ The AIC was also always greater for the destabilized data than the original data, but, similarly, always less than twice the AIC for the original data.
++ Curiously, all the coefficients, for both intercept and function variable, were closer to zero (0) for the **destabilized** data.  This seems counter-intuitive: as you increased instability in the function variable, you would think the coefficient for the function variable would increase, not decrease.
++ Unlike the Null Deviance, the Residual Deviance was always markedly larger for the destabilized data than the original data.
