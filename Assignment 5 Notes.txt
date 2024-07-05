@@ -1,0 +1,359 @@
+Currently:
+
+Complete 1-c: Exploring the Data
+
+Next up:
+
+Add dataset size along with dimensions.
+
+Add total document processing time.  
+
+Remove all # TDL 
+
+Check all code formatting standards.
+
+Complete Part 1
+
+Build website and Push
+
+Make Aiden a collaborator
+
+Get onto part 2
+
+Completed:
+
+You are moving some of your global variables to an earlier section.
+
+The underline in "_quatro.yml" is causing formatting problems in cdcdata-exercise.qmd
+ - Replacing all formatted buttons with verbatim code by enclosing in "`"
+ - Trying on _quatro.yml first - WORKED
+
+Create indicator that there is a lookup table created for values
+
+Eliminate some columns that have little or no value, after dropping the first three columns.
+ - Trying to find out if four (4) conditions are always the same in a given row
+ - Code written for first condition
+  - Code for first condition running, but pulling NULL value every time (9235 values are not NULL)
+  - Trying to pull a specific nonnull value and reverse engineer
+  - Row 16 has a nonnull value for ZC.data$Data_Value_Footnote_Symbol
+Based on this output:
+> ZC.CheckRow <- 16
+> ZC.data$Data_Value_Footnote_Symbol[ZC.CheckRow]
+[1] "~"
+> ZC.ThisValue <- ZC.data$Data_Value_Football_Symbol[ZC.CheckRow] #This error cost me 3 hours.
+> ZC.ThisValue
+NULL
+The environment is whack.  Restarting R Studio.  No improvement.  Even after referencing the value explicitly instead of assigning it first, returns all NULLs.
+
+Biting the bullet and restarting the laptop. 6:45 PM 7/4/2024
+Began building 7:00 PM 7/4/2024.  Total recovery by 7:34 PM 7/4/2024 (interrupted by phone call).   Still no change in behavior.
+
+Maybe it's because Football does not equal Footnote.  Checking ... that was it.
+
+So now we'll see if the assignment works instead of referring to it explicitly.  It does.  Constructing the second condition, which is similar to the first.  Worked.  Created third condition.   Worked.  Created fourth condition based on third.  Worked.  Sanity check reports each list of row numbers is 9235 values long.  Removed sanity check.
+
+Trying to compare: list comparison not supported in R.  Converting to vectors.  Comparison results in error: ! the condition has length > 1.  Diagnostic lines entered to display vectors and comparison code excised, perhaps temporarily.  Diagnostic readouts looked identical as expected, so trying a new comparison approach.  Comparing just the first two sets of row numbers.  Got same comparison not supported error as before.  Excised code and added diagnostics.  The diagnostic lines inicate that the values are of type list.  Verifying the content of the value.  Diagnostics indicate values to be compared are lists of 1 item long.
+
+So we're back to unlisting.  This gives us integers out of the lists of 1 item long, and these can be compared.
+Comparison complete and qualifies for column removal.
+
+Any more columns to get rid of? NO
+
+A SQL statement will be utilized to count the number of times each combination of the **StratificationCategoryId1** and **StratificationCategory1** occurs in the data.  Since there are seven (7) unique values in each of these columns, if there are a total of seven (7) combinations, then a one-to-one correlation is established.
+
+```{r}
+sqldf("select StratificationCategoryId1, StratificationCategory1, count(*) as Occurs from 'ZC.data' group by StratificationCategoryId1, StratificationCategory1")
+```
+
+There are only seven (7) total unique combinations for these two (2) variables, so a lookup table for **StratificationCategory1** will be created with **StratificationCategoryId1** as the lookup value.  The lookup value and the lookup table will be stored as a relationship.  Afterwards, the columns containing the lookup values will be dropped.
+
+```{r}
+# Creating and displaying top of lookup tables
+ZC.StratificationCategory1 <- sqldf("select distinct StratificationCategoryId1, StratificationCategory1 from 'ZC.data' order by StratificationCategoryId1")
+head(ZC.StratificationCategory1)
+# Storing lookup columns and lookup table names
+ZC.lookupindex <- ZC.lookupindex+1
+ZC.lookupcolumn[ZC.lookupindex] <- "StratificationCategoryId1"
+ZC.lookuptable[ZC.lookupindex] <- "StratificationCategory1"
+ZC.data <- subset(ZC.data, select = -c(StratificationCategory1))
+# Report master dataset dimensions
+# Increase dimension index
+ZC.dimindex <- ZC.dimindex+1
+ZC.TheseDims <- dim(ZC.data)
+ZC.datarows[ZC.dimindex] <- ZC.TheseDims[1]
+ZC.datacols[ZC.dimindex] <- ZC.TheseDims[2]
+ZC.printline <- paste("The master dataset is currently"
+                        , ZC.datarows[ZC.dimindex]
+                        , "rows by"
+                        , ZC.datacols[ZC.dimindex]
+                        , "columns."
+                        , sep=" ")
+ZC.printline
+```
+A SQL statement will be utilized to count the number of times each combination of the **StratificationID1** and **Stratification1** occurs in the data.  Since there are 29unique values in each of these columns, if there are a total of 29 ombinations, then a one-to-one correlation is established.
+
+```{r}
+sqldf("select StratificationID1, Stratification1, count(*) as Occurs from 'ZC.data' group by StratificationID1, Stratification1")
+```
+
+There are only 29total unique combinations for these two (2) variables, so a lookup table for **Stratification1** will be created with **StratificationID1** as the lookup value.  The lookup value and the lookup table will be stored as a relationship.  Afterwards, the columns containing the lookup values will be dropped.
+
+```{r}
+# Creating and displaying top of lookup tables
+ZC.Stratification1 <- sqldf("select distinct StratificationID1, Stratification1 from 'ZC.data' order by StratificationID1")
+head(ZC.Stratification1)
+# Storing lookup columns and lookup table names
+ZC.lookupindex <- ZC.lookupindex+1
+ZC.lookupcolumn[ZC.lookupindex] <- "StratificationID1"
+ZC.lookuptable[ZC.lookupindex] <- "Stratification1"
+ZC.data <- subset(ZC.data, select = -c(Stratification1))
+# Report master dataset dimensions
+# Increase dimension index
+ZC.dimindex <- ZC.dimindex+1
+ZC.TheseDims <- dim(ZC.data)
+ZC.datarows[ZC.dimindex] <- ZC.TheseDims[1]
+ZC.datacols[ZC.dimindex] <- ZC.TheseDims[2]
+ZC.printline <- paste("The master dataset is currently"
+                        , ZC.datarows[ZC.dimindex]
+                        , "rows by"
+                        , ZC.datacols[ZC.dimindex]
+                        , "columns."
+                        , sep=" ")
+ZC.printline
+```
+
+Abandoned:
+
+You are attempting to turn two repeated blocks of code into functions:
+- Master Dataset Dimension
+- Summary Table Construction
+
+You want to build SQL statements in pieces so horizontal scrolling in the website is not necessary
+
+Check for any other horizontal scrolling
+
+Index for summary tables
+
+
+
+R Code Blocks Excised - some of this may be reuseable
+
+  if(!(is.na(ZC.data$Data_Value[ZC.ThisRow]) | is.na(ZC.data$Data_Value_Alt[ZC.ThisRow])))
+    {
+    # Neither value is NA - compare
+    if (!(ZC.data$Data_Value[ZC.ThisRow] == ZC.data$Data_Value_Alt[ZC.ThisRow])) 
+      {
+      ZC.DataDeltas <- ZC.DataDeltas+1
+      } 
+    else if (is.na(ZC.data$Data_Value[ZC.ThisRow]) | is.na(ZC.data$Data_Value_Alt[ZC.ThisRow]))
+    }
+
+  if (is.na(ZC.data$Data_Value[ZC.ThisRow]))
+    { 
+      # Data_Value is NA
+      if (!(is.na(ZC.data$Data_Value_Alt[ZC.ThisRow])))
+      {
+        # Data_Value_Alt is not NA - automatic difference
+        ZC.DataDeltas <- ZC.DataDeltas+1
+      }
+      else if 
+    }
+
+    if (!(is.na(ZC.data$Data_Value[ZC.ThisRow])&is.na(ZC.data$Data_Value_Alt[ZC.ThisRow])))
+
+else
+  {
+    ZC.printline <- paste("YearEnd will not be dropped. "
+                        , ZC.YearDeltas
+                        , "differences were detected with YearStart."
+                        , sep=" ")
+    print(ZC.printline)
+  }
+
+else
+  {
+    ZC.printline <- paste("Topic will not be dropped. "
+                        , ZC.ClassDeltas
+                        , "differences were detected with Class."
+                        , sep=" ")
+    print(ZC.printline)
+  }
+
+else
+  {
+    ZC.printline <- paste("Data_Value_Alt will not be dropped. "
+                        , ZC.DataDeltas
+                        , "differences were detected with Data_Value."
+                        , sep=" ")
+    print(ZC.printline)
+  }
+
+ZC.datadim02 <- dim(ZC.data)
+ZC.datadim03 <- dim(ZC.data)
+ZC.datadim04 <- dim(ZC.data)
+
+# Increase dimension index
+ZC.dimindex <- ZC.dimindex+1
+ZC.TheseDims <- dim(ZC.data)
+ZC.datarows[ZC.dimindex] <- ZC.TheseDims[1]
+ZC.datacols[ZC.dimindex] <- ZC.TheseDims[2]
+ZC.printline <- paste("The master dataset is currently"
+                        , ZC.datarows[ZC.dimindex]
+                        , "rows by"
+                        , ZC.datacols[ZC.dimindex]
+                        , "columns."
+                        , sep=" ")
+ZC.printline
+
+### Define Global Functions
+
+Multiple lines of code need to be executed two (2) or more times throughout this exercise.  These repeated lines of code are incorporated into functions, without parameters, and called as needed.
+
+Function: ZC.GetDims
+
+```{r}
+# Function ZC.GetDims retrieves, stores, and reports the dimensions of the master dataset.
+ZC.GetDims <- function(dummy) {
+  # Report master dataset dimensions
+  # Increase dimension index
+  ZC.dimindex <- ZC.dimindex+1
+  ZC.TheseDims <- dim(ZC.data)
+  ZC.datarows[ZC.dimindex] <- ZC.TheseDims[1]
+  ZC.datacols[ZC.dimindex] <- ZC.TheseDims[2]
+  ZC.printline <- paste("The master dataset is currently"
+                        , ZC.datarows[ZC.dimindex]
+                        , "rows by"
+                        , ZC.datacols[ZC.dimindex]
+                        , "columns."
+                        , sep=" ")
+  ZC.printline
+  return
+}
+```
+
+Function: ZC.DatasetSummary
+
+```{r}
+# Function ZC.DatasetSummary builds a table describing some aspects for each column in the master dataset.
+ZC.DatasetSummary <- function(dummy) {
+  ZC.index <- 0
+  ZC.colname <- list()
+  ZC.coltype <- list()
+  ZC.NAvals <- list()
+  ZC.unique <- list()
+  ZC.example <- list()
+  # Loop through the columns to populate the lists
+  for (ZC.ThisColumn in colnames(ZC.data))
+  {
+    #Increment the index for the lists
+    ZC.index <- ZC.index+1 
+    # Assign the column name
+    ZC.colname[ZC.index] <- ZC.ThisColumn 
+    # Assign the column type
+    ZC.coltype[ZC.index] <- typeof(ZC.data[[ZC.ThisColumn]]) 
+    # Count the number of NAs in the column
+    ZC.NAvals[ZC.index] <- sum(is.na(ZC.data[[ZC.ThisColumn]])) 
+    # Count the numner of unique values in the column
+    ZC.TheseValues <- table(ZC.data[[ZC.ThisColumn]])
+    ZC.unique[ZC.index] <- length(ZC.TheseValues)
+    # Find a suitable example value
+    # Prepare to loop through all the values to find an acceptable example
+    for (ZC.ThisRow in 1:nrow(ZC.data)) 
+    {
+      # Start this FOR loop but prepare to break out of it
+      ZC.BreakFlag = 0
+      # As soon as an acceptable value is found, set the break flag to 1
+      # Retrieve the value in ThisRow
+      ZC.ThisExp <- ZC.data[[ZC.ThisColumn]][ZC.ThisRow]
+      # Continue with this example only if it is not NA
+      if (!is.na(ZC.ThisExp))
+      {
+        # Subsequent processing depends on data type of current example
+        # Is the current example a character string?
+        if (typeof(ZC.ThisExp) == "character")
+        {
+          # Trim any leading and trailing spaces from the current example
+          # If there is nothing but spaces, only an empty string will survive
+          ZC.ThisExp <- trimws(ZC.ThisExp)
+          # Continue with this example only if it is not empty
+          if (nchar(ZC.ThisExp)>0)
+          {
+            # We have an acceptable example
+            ZC.BreakFlag <- 1
+            # Let's cut it short if the example is too long
+            if (nchar(ZC.ThisExp)>8)
+            {
+              ZC.ThisExp <- paste(substr(ZC.ThisExp, 1, 5), "...", sep="")
+            }
+          }
+        } else if (typeof(ZC.ThisExp) == "integer" | typeof(ZC.ThisExp) == "double")
+        {
+          # We would prefer a nonzero value, and we will loop through all the values if necessary to find one
+          if (!ZC.ThisExp==0) ZC.BreakFlag <- 1
+        } else
+        { # The value could be boolean, complex, or something else
+          # We will take it
+          ZC.BreakFlag <- 1
+        }
+      }
+      # If we have an acceptable value, we can stop looping through the rows
+      if (ZC.BreakFlag == 1) break
+    }
+    ZC.example[ZC.index] <- ZC.ThisExp
+  }
+  # Bind the lists together in a single object
+  ZC.datasum01 <- cbind(ZC.colname, ZC.coltype, ZC.NAvals, ZC.unique, ZC.example)
+  # Apply more friendly column names
+  colnames(ZC.datasum01) <- c("Column"
+                            , "Data Type"
+                            , "NA Values"
+                            , "Uniques"
+                            , "Example"
+  )
+  ZC.datasum01
+  return
+}
+
+```
+# A master data summary table will be built throughout this exercise.  The changing summary tables will be tracked over time.  Variables to track these changing table will be created.
+ZC.sumindex <- 0
+ZC.datasum <- list()
+
+# Increment summary index
+ZC.sumindex <- ZC.sumindex+1
+
+  ZC.ThisValue <- ZC.CheckRow[[Data_Value_Footnote_Symbol]]
+  # Trim any leading and trailing spaces from the current value
+  # If there is nothing but spaces, only an empty string will survive
+  # ZC.ThisValue <- trimws(ZC.ThisValue)
+  # is Data_Value_Footnote_Symbol not blank?
+  # if (nchar(ZC.ThisValue)>0)
+  # if (!(ZC.ThisValue==''))
+  if (!(ZC.ThisValue==NULL))
+  {
+    # Data_Value_Footnote_Symbol is not blank, so store the row number
+    ZC.DVFSIndex <- ZC.DVFSIndex+1
+    ZC.DVFS[ZC.DVFSIndex] <- ZC.CheckRow
+  }
+
+if (ZC.DVFS.vector==ZC.DVF.vector)
+{
+  print("Row numbers where conditions are met match.")
+} else
+{
+  print("Row numbers where conditions are met do not match.")
+}
+
+# converting lists to vectors first
+ZC.DVFS.vector <- unlist(ZC.DVFS)
+ZC.DVF.vector <- unlist(ZC.DVF)
+ZC.DVFS.vector # Diagnostic line
+ZC.DVF.vector # Diagnostic line
+
+    if(!(ZC.DVFS[ZC.CompRow]==ZC.DVF[ZC.CompRow]))
+    {
+      # Unequal row numbers found.  Trip flag and break
+      ZC.CompEquals <- FALSE
+      break
+    }
+
