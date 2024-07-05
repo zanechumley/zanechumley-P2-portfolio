@@ -16,7 +16,7 @@ website:
             file: coding-exercise/coding-exercise.qmd
           - text: "Data Exercise"
             file: data-exercise/data-exercise.qmd
-          - text: "CDC Data Exercise"
+          - text: "Data Analysis Exercise"
             file: cdcdata-exercise/cdcdata-exercise.qmd
           - text: "Presentation Exercise"
             file: presentation-exercise/presentation-exercise.qmd
