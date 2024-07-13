@@ -6,6 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Zane Chumley">
+<meta name="dcterms.date" content="2024-07-10">
 
 <title>Zane Chumley Data Analysis Portfolio - Presentation Exercise</title>
 <style>
@@ -106,6 +108,14 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">R Coding Exercise</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../data-exercise/data-exercise.html">
+ <span class="dropdown-text">Data Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../cdcdata-exercise/cdcdata-exercise.html">
+ <span class="dropdown-text">Data Analysis Exercise</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../presentation-exercise/presentation-exercise.html">
  <span class="dropdown-text">Presentation Exercise</span></a>
   </li>  
@@ -146,7 +156,19 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Zane Chumley </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 10, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -156,9 +178,35 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Placeholder file for the future data/results presentation exercise.</p>
+<section id="reference" class="level3">
+<h3 class="anchored" data-anchor-id="reference">Reference</h3>
+<p>This exercise attempts to reproduce the graphic predicting the outcome of the 2024 Presidential Election found <a href="https://projects.fivethirtyeight.com/2024-election-forecast/?cid=rrpromo">here</a>.</p>
+<p>The edition of the graphic to be reproduced is timestamped as “UPDATED JUL. 11, 2024, AT 1:53 PM”.</p>
+<p>Here is a non-interactive presentation published on the website associated with the timestamp:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Presentation-Exercise-Example.png" class="img-fluid figure-img"></p>
+<figcaption>2024 Presidential Election Graphic to reproduce</figcaption>
+</figure>
+</div>
+<p>Key features associated with this graphic (in no particular order):</p>
+<ul>
+<li>The larger the margin in the electoral college, the more intense the red (Republican) or blue (Democrats).</li>
+<li>The labels on the x-axis are not uniformly distributed.</li>
+<li>The electoral college ties are presented as distinct and apart from the non-tied results.</li>
+<li>Hover over any simulated outcome, and the declared winner, with electoral college spread, will be displayed.</li>
+<li>The columns group electoral college totals in counts of five (5). For example, the simulations where the winner won anywhere from 270-274 will be presented in a single column; the same with 275-279, 280-284, 285-289, and so on.</li>
+</ul>
+</section>
+<section id="graph-construction" class="level2">
+<h2 class="anchored" data-anchor-id="graph-construction">Graph Construction</h2>
+<section id="data-collection" class="level3">
+<h3 class="anchored" data-anchor-id="data-collection">Data Collection</h3>
+<p>The source data for this graph could not be found, so I used both DataThief and WebPlotDigitizer to extract the data from the graph.</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

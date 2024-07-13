@@ -179,7 +179,7 @@
     "href": "presentation-exercise/presentation-exercise.html",
     "title": "Presentation Exercise",
     "section": "",
-    "text": "Placeholder file for the future data/results presentation exercise."
+    "text": "This exercise attempts to reproduce the graphic predicting the outcome of the 2024 Presidential Election found here.\nThe edition of the graphic to be reproduced is timestamped as “UPDATED JUL. 11, 2024, AT 1:53 PM”.\nHere is a non-interactive presentation published on the website associated with the timestamp:\n\n\n\n2024 Presidential Election Graphic to reproduce\n\n\nKey features associated with this graphic (in no particular order):\n\nThe larger the margin in the electoral college, the more intense the red (Republican) or blue (Democrats).\nThe labels on the x-axis are not uniformly distributed.\nThe electoral college ties are presented as distinct and apart from the non-tied results.\nHover over any simulated outcome, and the declared winner, with electoral college spread, will be displayed.\nThe columns group electoral college totals in counts of five (5). For example, the simulations where the winner won anywhere from 270-274 will be presented in a single column; the same with 275-279, 280-284, 285-289, and so on."
   },
   {
     "objectID": "starter-analysis-exercise/code/eda-code/eda.html",
@@ -362,5 +362,12 @@
     "title": "cdcdata-exercise",
     "section": "",
     "text": "# START - Space Reserved for Collaborator\n\n\n# END - Space Reserved for Collaborator"
+  },
+  {
+    "objectID": "presentation-exercise/presentation-exercise.html#graph-construction",
+    "href": "presentation-exercise/presentation-exercise.html#graph-construction",
+    "title": "Presentation Exercise",
+    "section": "Graph Construction",
+    "text": "Graph Construction\n\nData Collection\nThe source data for this graph could not be found, so I used both DataThief and WebPlotDigitizer to extract the data from the graph."
   }
 ]
