@@ -910,16 +910,57 @@ _If everything works as expected, commit and push your changes to GitHub. Instea
 Done.  
 
 ## Part 2
+This section contributed by Aiden Sutherland
 
 ```{r}
-# START - Space Reserved for Collaborator
+# START - load needed libraries, install packages if needed.
+library(synthpop)
+library(mice)
+library(dplyr)
+library(ggplot2)
 ```
 
 
+Here I created the synthetic data using synthpop, it is designed to create synthetic data.
+
+here is a link to the website to read more about the package:
+https://www.synthpop.org.uk/about-synthpop.html
+
 
 ```{r}
-# END - Space Reserved for Collaborator
+set.seed(123)
+syn_data <- syn(ZC.data)
+synthetic_ZC <- syn_data$syn
+head(synthetic_ZC)
 ```
+In order to have some visualizations, I am converting the character variable types to factors.
+```{r}
+chr_vars <- names(synthetic_ZC)[sapply(synthetic_ZC, is.character)]
+synthetic_ZC[chr_vars] <- lapply(synthetic_ZC[chr_vars], factor)
+str(synthetic_ZC)
+```
+Below I will now provide some summaries and visualizations of the data.
+
+Here are the visualizations for the categorical variables from the synthetic dataset.
+```{r}
+# Identify categorical and continuous variables
+categorical_vars <- names(synthetic_ZC)[sapply(synthetic_ZC, is.factor)]
+continuous_vars <- names(synthetic_ZC)[sapply(synthetic_ZC, is.numeric)]
+
+# Visualize categorical variables (bar plots)
+for (var in categorical_vars) {
+  p <- ggplot(synthetic_ZC, aes_string(x = var)) +
+    geom_bar() +
+    theme_minimal() +
+    labs(title = paste("Bar Plot of", var), x = var, y = "Count")
+  print(p)
+}
+```
+Here is a summary of the continuous variables from the synthetic dataset
+```{r}
+summary(synthetic_ZC[continuous_vars])
+```
+
 
 ## END of Assignment #5
 
