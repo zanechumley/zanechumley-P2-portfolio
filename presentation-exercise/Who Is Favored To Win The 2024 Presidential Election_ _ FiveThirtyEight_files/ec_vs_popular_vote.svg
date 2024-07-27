@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ec-ev</title>
+    <g id="Designs-v5-(final)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="national-navigation-desktop" transform="translate(-1087, -5)" stroke="#D8D8D8" stroke-width="4">
+            <g id="ec-ev" transform="translate(1089, 7.5)">
+                <line x1="0.413043478" y1="9.91304348" x2="19.4130435" y2="9.91304348" id="Line-15"></line>
+                <line x1="0.413043478" y1="9.91304348" x2="19.4130435" y2="9.91304348" id="Line-15" transform="translate(9.913, 9.913) rotate(90) translate(-9.913, -9.913)"></line>
+            </g>
+        </g>
+    </g>
+</svg>

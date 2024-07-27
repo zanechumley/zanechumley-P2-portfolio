@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="59px" height="59px" viewBox="0 0 59 59" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Navigation icon</title>
+    <defs>
+        <circle id="path-1" cx="22.5" cy="22.5" r="22.5"></circle>
+        <filter x="-23.3%" y="-21.1%" width="151.1%" height="151.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="1" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.333333333   0 0 0 0 0.333333333   0 0 0 0 0.333333333  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Designs-v5-(final)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="national-navigation-mobile" transform="translate(-253, -543)">
+            <g id="Navigation-4" transform="translate(0, 173)">
+                <g id="Navigation-icon" transform="translate(259, 375)">
+                    <g id="Oval">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    </g>
+                    <polygon id="Triangle" fill="#EC8A3A" transform="translate(27.8134, 16.3971) rotate(45) translate(-27.8134, -16.3971)" points="27.8133905 8.15206307 36.0584632 24.6422086 19.5683177 24.6422086"></polygon>
+                    <polygon id="Triangle" fill="#EC8A3A" transform="translate(16.3971, 27.8134) rotate(225) translate(-16.3971, -27.8134)" points="16.3971359 19.5683177 24.6422086 36.0584632 8.15206307 36.0584632"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
