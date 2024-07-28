@@ -6,6 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Zane Chumley">
+<meta name="dcterms.date" content="2024-07-26">
 
 <title>Zane Chumley Data Analysis Portfolio - Tidy Tuesday Exercise</title>
 <style>
@@ -19,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -154,7 +190,19 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Zane Chumley </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 26, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -164,9 +212,756 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Placeholder file for the future Tidy Tuesday exercise.</p>
+<section id="tidy-tuesday---we-27-july-2024" class="level2">
+<h2 class="anchored" data-anchor-id="tidy-tuesday---we-27-july-2024">Tidy Tuesday - W/E 27 July 2024</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DA 6833 02T</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Summer 2024</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># School of Data Science</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># University of Texas at San Antonio</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Zane Chumley</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Banner ID: @01318598</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># UTSAid: wgs999</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="data-information" class="level3">
+<h3 class="anchored" data-anchor-id="data-information">Data Information</h3>
+<p>Data in this dataset comes from Wikipedia. Data collected on seasons 1-18 of American Idol.</p>
+<p>The Datasets</p>
+<ul>
+<li><code>songs.csv</code> - songs that contestants sang and competed with on American Idol from seasons 1-18</li>
+<li><code>auditions.csv</code> - audition, cities, dates, and venues</li>
+<li><code>elimination_chart.csv</code> - eliminations by week. Data availability varies season-to-season based on season length and number of finalists competing</li>
+<li><code>finalists.csv</code> - information on top contestants, including birthday, hometown, and description</li>
+<li><code>ratings.csv</code> - episode ratings and views.</li>
+<li><code>seasons.csv</code> - season-level information, including season winner, runner-up, release dates, and judges</li>
+</ul>
+</section>
+<section id="global-function-definition" class="level3">
+<h3 class="anchored" data-anchor-id="global-function-definition">Global Function Definition</h3>
+<p>Here we define any functions (subprocedures) that will be reused throughout this exercise.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ZCTT.checkit <span class="ot">&lt;-</span> <span class="cf">function</span> (ZCTT.checkthis) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Function ZCTT.checkit removes columns from a passed dataframe that is missing a pre-selected amount of data.  </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Before-and-after information about the passed dataframe is displayed.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display brief overview of passed dataframe</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>(ZCTT.checkthis)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># arbitrarily deciding columns missing information in more than 20% of rows should be discarded</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  ZCTT.cutoff <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ZCTT.checkrows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(ZCTT.checkthis)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  ZCTT.threshold <span class="ot">&lt;-</span> ZCTT.cutoff<span class="sc">*</span>ZCTT.checkrows</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove columns exceeding threshold of missing data </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  ZCTT.keepthis <span class="ot">&lt;-</span> ZCTT.checkthis</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  ZCTT.checkcols <span class="ot">&lt;-</span> <span class="fu">ncol</span>(ZCTT.checkthis)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># processing in reverse order, since removing columns changes larger indicies</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (ZCTT.thiscolumn <span class="cf">in</span> ZCTT.checkcols<span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    ZCTT.colname <span class="ot">&lt;-</span> <span class="fu">colnames</span>(ZCTT.checkthis)[ZCTT.thiscolumn]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    ZCTT.NAs <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(ZCTT.checkthis[[ZCTT.thiscolumn]]))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (ZCTT.NAs <span class="sc">&gt;</span> ZCTT.threshold) {</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      ZCTT.keepthis <span class="ot">&lt;-</span> ZCTT.keepthis[,<span class="sc">-</span>ZCTT.thiscolumn]</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      ZCTT.printline <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Column "</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                              , ZCTT.colname</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                              , <span class="st">" was dropped because it was missing "</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                              , ZCTT.NAs</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                              , <span class="st">" of "</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                              , ZCTT.checkrows</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                              , <span class="st">" values."</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                              , <span class="at">sep=</span><span class="st">""</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                              )</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">print</span>(ZCTT.printline)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display brief overview of returned dataframe</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>(ZCTT.keepthis)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (ZCTT.keepthis)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>ZCTT.diagnostic_dump01 <span class="ot">&lt;-</span> <span class="cf">function</span> () {</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This function was diagnostic in purpose and was no longer needed once problems with looping through the finalists table were fixed.  It remains here for posterity, and posterior's, sake.</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Finalist: "</span>, ZCTT.ThisFinalist)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Season: "</span>, ZCTT.finalists<span class="sc">$</span>Season[ZCTT.ThisFinalist])</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Last Audition: "</span>,ZCTT.LastAudition)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Birthday: "</span>, ZCTT.finalists<span class="sc">$</span>Birthday[ZCTT.ThisFinalist])</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Birthday Good? "</span>, <span class="sc">!</span>(<span class="fu">is.na</span>(ZCTT.finalists<span class="sc">$</span>Birthday[ZCTT.ThisFinalist])))</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>(<span class="fu">is.na</span>(ZCTT.finalists<span class="sc">$</span>Birthday[ZCTT.ThisFinalist]))) {</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Birthday as a Date: "</span>, ZCTT.ThisBirthday)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Age in Days (timediff) : "</span>, ZCTT.LastAudition<span class="sc">-</span>ZCTT.ThisBirthday)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Age in Years (numeric): "</span>, ZCTT.ThisAge)</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Age Assigned to Finalist: "</span>, ZCTT.finalists<span class="sc">$</span>age[ZCTT.ThisFinalist])</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Finalists Counted So Far for Season"</span>, ZCTT.finalists<span class="sc">$</span>Season[ZCTT.ThisFinalist], <span class="st">": "</span>, ZCTT.finalist_count[ZCTT.finalists<span class="sc">$</span>Season[ZCTT.ThisFinalist]])</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>ZCTT.dianostic_dump02 <span class="ot">&lt;-</span> <span class="cf">function</span> (ZCTT.AgeAssigned) {</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This function was also diagnostic in purpose and was no longer needed once problems with looping through the finalists table were fixed.  It remains here for posterity, and posterior's, sake.</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Finalist: "</span>, ZCTT.ThisFinalist)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Age in Years (numeric): "</span>, ZCTT.ThisAge)</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Age Assigned to Finalist: "</span>, ZCTT.finalists<span class="sc">$</span>age[ZCTT.ThisFinalist])</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Assignment Complete: "</span>, ZCTT.AgeAssigned)</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (ZCTT.AgeAssigned) {</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-importation" class="level3">
+<h3 class="anchored" data-anchor-id="data-importation">Data Importation</h3>
+<p>To start, let’s load the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data from files </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ZCTT.auditions <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/auditions.csv"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ZCTT.eliminations <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/eliminations.csv"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ZCTT.finalists <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/finalists.csv"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ZCTT.ratings <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/ratings.csv"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ZCTT.seasons <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/seasons.csv"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>ZCTT.songs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/songs.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-overview" class="level3">
+<h3 class="anchored" data-anchor-id="data-overview">Data Overview</h3>
+<p>Let’s get a brief overview of the data we have. As we go through the dataframes, if we encounter conditions in the data that may give us some grief later, we’ll address them now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#basic data info</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ZCTT.auditions <span class="ot">&lt;-</span> <span class="fu">ZCTT.checkit</span>(ZCTT.auditions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   142 obs. of  12 variables:
+ $ season              : int  1 1 1 1 1 1 1 2 2 2 ...
+ $ audition_date_start : chr  "2002-04-20" "2002-04-23" "2002-04-26" "2002-04-29" ...
+ $ audition_date_end   : chr  "2002-04-22" "2002-04-25" "2002-04-28" "2002-05-01" ...
+ $ audition_city       : chr  "Los Angeles, California" "Seattle, Washington" "Chicago, Illinois" "New York City, New York" ...
+ $ audition_venue      : chr  "Westin Bonaventure Hotel" "Hyatt Regency Hotel" "Congress Plaza Hotel" "Millenium Hilton Hotel" ...
+ $ episodes            : chr  NA NA NA NA ...
+ $ episode_air_date    : chr  "11-Jun-02" "11-Jun-02" "11-Jun-02" "11-Jun-02" ...
+ $ callback_venue      : chr  NA NA NA NA ...
+ $ callback_date_start : chr  NA NA NA NA ...
+ $ callback_date_end   : chr  NA NA NA NA ...
+ $ tickets_to_hollywood: int  31 10 23 25 15 11 6 22 35 46 ...
+ $ guest_judge         : chr  NA NA NA NA ...
+
+[1] "Column guest_judge was dropped because it was missing 133 of 142 values."
+[1] "Column tickets_to_hollywood was dropped because it was missing 48 of 142 values."
+[1] "Column callback_venue was dropped because it was missing 43 of 142 values."
+[1] "Column episode_air_date was dropped because it was missing 42 of 142 values."
+[1] "Column episodes was dropped because it was missing 126 of 142 values."
+
+'data.frame':   142 obs. of  7 variables:
+ $ season             : int  1 1 1 1 1 1 1 2 2 2 ...
+ $ audition_date_start: chr  "2002-04-20" "2002-04-23" "2002-04-26" "2002-04-29" ...
+ $ audition_date_end  : chr  "2002-04-22" "2002-04-25" "2002-04-28" "2002-05-01" ...
+ $ audition_city      : chr  "Los Angeles, California" "Seattle, Washington" "Chicago, Illinois" "New York City, New York" ...
+ $ audition_venue     : chr  "Westin Bonaventure Hotel" "Hyatt Regency Hotel" "Congress Plaza Hotel" "Millenium Hilton Hotel" ...
+ $ callback_date_start: chr  NA NA NA NA ...
+ $ callback_date_end  : chr  NA NA NA NA ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ZCTT.eliminations <span class="ot">&lt;-</span> <span class="fu">ZCTT.checkit</span>(ZCTT.eliminations)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   456 obs. of  46 variables:
+ $ season    : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ place     : chr  "1" "2" "3" "4" ...
+ $ gender    : chr  "Female" "Male" "Female" "Female" ...
+ $ contestant: chr  "Kelly Clarkson" "Justin Guarini" "Nikki McKibbin" "Tamyra Gray" ...
+ $ top_36    : chr  NA NA NA NA ...
+ $ top_36_2  : chr  NA NA NA NA ...
+ $ top_36_3  : chr  NA NA NA NA ...
+ $ top_36_4  : chr  NA NA NA NA ...
+ $ top_32    : chr  NA NA NA NA ...
+ $ top_32_2  : chr  NA NA NA NA ...
+ $ top_32_3  : chr  NA NA NA NA ...
+ $ top_32_4  : chr  NA NA NA NA ...
+ $ top_30    : chr  "N/A" "N/A" "N/A" "Safe (1st)" ...
+ $ top_30_2  : chr  "Safe (2nd)" "Safe (1st)" "N/A" "N/A" ...
+ $ top_30_3  : chr  "N/A" "N/A" "Safe (2nd)" "N/A" ...
+ $ top_25    : chr  NA NA NA NA ...
+ $ top_25_2  : chr  NA NA NA NA ...
+ $ top_25_3  : chr  NA NA NA NA ...
+ $ top_24    : chr  NA NA NA NA ...
+ $ top_24_2  : chr  NA NA NA NA ...
+ $ top_24_3  : chr  NA NA NA NA ...
+ $ top_20    : chr  NA NA NA NA ...
+ $ top_20_2  : chr  NA NA NA NA ...
+ $ top_16    : chr  NA NA NA NA ...
+ $ top_14    : chr  NA NA NA NA ...
+ $ top_13    : chr  NA NA NA NA ...
+ $ top_12    : chr  NA NA NA NA ...
+ $ top_11    : chr  NA NA NA NA ...
+ $ top_11_2  : chr  NA NA NA NA ...
+ $ wildcard  : chr  "N/A" "N/A" "N/A" "N/A" ...
+ $ comeback  : logi  NA NA NA NA NA NA ...
+ $ top_10    : chr  "Safe" "Safe" "Bottom Three" "Safe" ...
+ $ top_9     : chr  NA NA NA NA ...
+ $ top_9_2   : chr  NA NA NA NA ...
+ $ top_8     : chr  "Safe" "Safe" "Safe" "Safe" ...
+ $ top_8_2   : chr  NA NA NA NA ...
+ $ top_7     : chr  "Safe" "Bottom Two" "Bottom Three" "Safe" ...
+ $ top_7_2   : chr  NA NA NA NA ...
+ $ top_6     : chr  "Safe" "Safe" "Bottom Three" "Safe" ...
+ $ top_6_2   : chr  NA NA NA NA ...
+ $ top_5     : chr  "Safe" "Safe" "Bottom Two" "Safe" ...
+ $ top_5_2   : chr  NA NA NA NA ...
+ $ top_4     : chr  "Safe" "Safe" "Bottom Two" "Eliminated" ...
+ $ top_4_2   : chr  NA NA NA NA ...
+ $ top_3     : chr  "Safe" "Safe" "Eliminated" NA ...
+ $ finale    : chr  "Winner" "Runner-Up" NA NA ...
+
+[1] "Column finale was dropped because it was missing 417 of 456 values."
+[1] "Column top_3 was dropped because it was missing 411 of 456 values."
+[1] "Column top_4_2 was dropped because it was missing 452 of 456 values."
+[1] "Column top_4 was dropped because it was missing 396 of 456 values."
+[1] "Column top_5_2 was dropped because it was missing 451 of 456 values."
+[1] "Column top_5 was dropped because it was missing 381 of 456 values."
+[1] "Column top_6_2 was dropped because it was missing 450 of 456 values."
+[1] "Column top_6 was dropped because it was missing 366 of 456 values."
+[1] "Column top_7_2 was dropped because it was missing 442 of 456 values."
+[1] "Column top_7 was dropped because it was missing 344 of 456 values."
+[1] "Column top_8_2 was dropped because it was missing 440 of 456 values."
+[1] "Column top_8 was dropped because it was missing 335 of 456 values."
+[1] "Column top_9_2 was dropped because it was missing 447 of 456 values."
+[1] "Column top_9 was dropped because it was missing 348 of 456 values."
+[1] "Column top_10 was dropped because it was missing 306 of 456 values."
+[1] "Column comeback was dropped because it was missing 456 of 456 values."
+[1] "Column wildcard was dropped because it was missing 350 of 456 values."
+[1] "Column top_11_2 was dropped because it was missing 434 of 456 values."
+[1] "Column top_11 was dropped because it was missing 312 of 456 values."
+[1] "Column top_12 was dropped because it was missing 335 of 456 values."
+[1] "Column top_13 was dropped because it was missing 404 of 456 values."
+[1] "Column top_14 was dropped because it was missing 428 of 456 values."
+[1] "Column top_16 was dropped because it was missing 440 of 456 values."
+[1] "Column top_20_2 was dropped because it was missing 424 of 456 values."
+[1] "Column top_20 was dropped because it was missing 376 of 456 values."
+[1] "Column top_24_3 was dropped because it was missing 360 of 456 values."
+[1] "Column top_24_2 was dropped because it was missing 278 of 456 values."
+[1] "Column top_24 was dropped because it was missing 240 of 456 values."
+[1] "Column top_25_3 was dropped because it was missing 440 of 456 values."
+[1] "Column top_25_2 was dropped because it was missing 436 of 456 values."
+[1] "Column top_25 was dropped because it was missing 431 of 456 values."
+[1] "Column top_30_3 was dropped because it was missing 436 of 456 values."
+[1] "Column top_30_2 was dropped because it was missing 431 of 456 values."
+[1] "Column top_30 was dropped because it was missing 426 of 456 values."
+[1] "Column top_32_4 was dropped because it was missing 436 of 456 values."
+[1] "Column top_32_3 was dropped because it was missing 433 of 456 values."
+[1] "Column top_32_2 was dropped because it was missing 427 of 456 values."
+[1] "Column top_32 was dropped because it was missing 424 of 456 values."
+[1] "Column top_36_4 was dropped because it was missing 435 of 456 values."
+[1] "Column top_36_3 was dropped because it was missing 404 of 456 values."
+[1] "Column top_36_2 was dropped because it was missing 394 of 456 values."
+[1] "Column top_36 was dropped because it was missing 384 of 456 values."
+
+'data.frame':   456 obs. of  4 variables:
+ $ season    : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ place     : chr  "1" "2" "3" "4" ...
+ $ gender    : chr  "Female" "Male" "Female" "Female" ...
+ $ contestant: chr  "Kelly Clarkson" "Justin Guarini" "Nikki McKibbin" "Tamyra Gray" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ZCTT.finalists <span class="ot">&lt;-</span> <span class="fu">ZCTT.checkit</span>(ZCTT.finalists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   190 obs. of  6 variables:
+ $ Contestant : chr  "Kelly Clarkson" "Justin Guarini" "Nikki McKibbin" "Tamyra Gray" ...
+ $ Birthday   : chr  "24-Apr-82" "28-Oct-78" "28-Sep-78" "26-Jul-79" ...
+ $ Birthplace : chr  "Fort Worth, Texas" "Columbus, Georgia" "Grand Prairie, Texas" "Takoma Park, Maryland" ...
+ $ Hometown   : chr  "Burleson, Texas" "Doylestown, Pennsylvania" NA "Atlanta, Georgia" ...
+ $ Description: chr  "She performed Aretha Franklin's version of \"Respectand Vanessa Williams' \"Save The Best For Lastin the Hollywood rounds." "He performed  Oleta Adams' version of \"Get Herein the Hollywood rounds." "She had previously been on Popstars and auditioned with Gloria Gaynor's \"I Will Surviveand Whitney Houston's \"| __truncated__ "She had appeared on TV commercials and worked with other artists before auditioning for Idol, and was crowned M"| __truncated__ ...
+ $ Season     : int  1 1 1 1 1 1 1 1 1 1 ...
+
+[1] "Column Hometown was dropped because it was missing 88 of 190 values."
+
+'data.frame':   190 obs. of  5 variables:
+ $ Contestant : chr  "Kelly Clarkson" "Justin Guarini" "Nikki McKibbin" "Tamyra Gray" ...
+ $ Birthday   : chr  "24-Apr-82" "28-Oct-78" "28-Sep-78" "26-Jul-79" ...
+ $ Birthplace : chr  "Fort Worth, Texas" "Columbus, Georgia" "Grand Prairie, Texas" "Takoma Park, Maryland" ...
+ $ Description: chr  "She performed Aretha Franklin's version of \"Respectand Vanessa Williams' \"Save The Best For Lastin the Hollywood rounds." "He performed  Oleta Adams' version of \"Get Herein the Hollywood rounds." "She had previously been on Popstars and auditioned with Gloria Gaynor's \"I Will Surviveand Whitney Houston's \"| __truncated__ "She had appeared on TV commercials and worked with other artists before auditioning for Idol, and was crowned M"| __truncated__ ...
+ $ Season     : int  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ZCTT.ratings <span class="ot">&lt;-</span> <span class="fu">ZCTT.checkit</span>(ZCTT.ratings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   593 obs. of  17 variables:
+ $ season                 : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ show_number            : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ episode                : chr  "Auditions" "Hollywood Week" "Top 30: Group 1" "Top 30: Group 1 results" ...
+ $ airdate                : chr  "June 11, 2002" "June 12, 2002" "June 18, 2002" "June 19, 2002" ...
+ $ X18_49_rating_share    : chr  "4.8" "5.2" "5.2" "4.7" ...
+ $ viewers_in_millions    : num  9.85 11.24 10.3 9.47 9.08 ...
+ $ timeslot_et            : chr  NA NA NA NA ...
+ $ dvr_18_49              : chr  NA NA NA NA ...
+ $ dvr_viewers_millions   : chr  NA NA NA NA ...
+ $ total_18_49            : chr  NA NA NA NA ...
+ $ total_viewers_millions : chr  NA NA NA NA ...
+ $ weekrank               : chr  "12" "6" "6" "22" ...
+ $ ref                    : logi  NA NA NA NA NA NA ...
+ $ share                  : chr  NA NA NA NA ...
+ $ nightlyrank            : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ rating_share_households: chr  NA NA NA NA ...
+ $ rating_share           : chr  "6.1 / 11" "6.9 / 12" "6.2 / 11" "5.8 / 10" ...
+
+[1] "Column rating_share was dropped because it was missing 284 of 593 values."
+[1] "Column rating_share_households was dropped because it was missing 515 of 593 values."
+[1] "Column nightlyrank was dropped because it was missing 569 of 593 values."
+[1] "Column share was dropped because it was missing 449 of 593 values."
+[1] "Column ref was dropped because it was missing 593 of 593 values."
+[1] "Column total_viewers_millions was dropped because it was missing 539 of 593 values."
+[1] "Column total_18_49 was dropped because it was missing 539 of 593 values."
+[1] "Column dvr_viewers_millions was dropped because it was missing 539 of 593 values."
+[1] "Column dvr_18_49 was dropped because it was missing 539 of 593 values."
+[1] "Column timeslot_et was dropped because it was missing 515 of 593 values."
+
+'data.frame':   593 obs. of  7 variables:
+ $ season             : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ show_number        : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ episode            : chr  "Auditions" "Hollywood Week" "Top 30: Group 1" "Top 30: Group 1 results" ...
+ $ airdate            : chr  "June 11, 2002" "June 12, 2002" "June 18, 2002" "June 19, 2002" ...
+ $ X18_49_rating_share: chr  "4.8" "5.2" "5.2" "4.7" ...
+ $ viewers_in_millions: num  9.85 11.24 10.3 9.47 9.08 ...
+ $ weekrank           : chr  "12" "6" "6" "22" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ZCTT.seasons <span class="ot">&lt;-</span> <span class="fu">ZCTT.checkit</span>(ZCTT.seasons)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   18 obs. of  10 variables:
+ $ season          : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ winner          : chr  "Kelly Clarkson" "Ruben Studdard" "Fantasia Barrino" "Carrie Underwood" ...
+ $ runner_up       : chr  "Justin Guarini" "Clay Aiken" "Diana DeGarmo" "Bo Bice" ...
+ $ original_release: chr  "June 11&nbsp;(2002-06-11)&nbsp;–September 4, 2002&nbsp;(2002-09-04)" "January 21&nbsp;(2003-01-21)&nbsp;–May 21, 2003&nbsp;(2003-05-21)" "January 19&nbsp;(2004-01-19)&nbsp;–May 26, 2004&nbsp;(2004-05-26)" "January 18&nbsp;(2005-01-18)&nbsp;–May 25, 2005&nbsp;(2005-05-25)" ...
+ $ original_network: chr  "Fox" "Fox" "Fox" "Fox" ...
+ $ hosted_by       : chr  "Ryan Seacrest; Brian Dunkleman" "Ryan Seacrest" "Ryan Seacrest" "Ryan Seacrest" ...
+ $ judges          : chr  "Paula Abdul; Simon Cowell; Randy Jackson" "Paula Abdul; Simon Cowell; Randy Jackson" "Paula Abdul; Simon Cowell; Randy Jackson" "Paula Abdul; Simon Cowell; Randy Jackson" ...
+ $ no_of_episodes  : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ finals_venue    : chr  "Kodak Theatre" "Gibson Amphitheatre" "Kodak Theatre" "Kodak Theatre" ...
+ $ mentor          : chr  NA NA NA NA ...
+
+[1] "Column mentor was dropped because it was missing 16 of 18 values."
+[1] "Column no_of_episodes was dropped because it was missing 14 of 18 values."
+
+'data.frame':   18 obs. of  8 variables:
+ $ season          : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ winner          : chr  "Kelly Clarkson" "Ruben Studdard" "Fantasia Barrino" "Carrie Underwood" ...
+ $ runner_up       : chr  "Justin Guarini" "Clay Aiken" "Diana DeGarmo" "Bo Bice" ...
+ $ original_release: chr  "June 11&nbsp;(2002-06-11)&nbsp;–September 4, 2002&nbsp;(2002-09-04)" "January 21&nbsp;(2003-01-21)&nbsp;–May 21, 2003&nbsp;(2003-05-21)" "January 19&nbsp;(2004-01-19)&nbsp;–May 26, 2004&nbsp;(2004-05-26)" "January 18&nbsp;(2005-01-18)&nbsp;–May 25, 2005&nbsp;(2005-05-25)" ...
+ $ original_network: chr  "Fox" "Fox" "Fox" "Fox" ...
+ $ hosted_by       : chr  "Ryan Seacrest; Brian Dunkleman" "Ryan Seacrest" "Ryan Seacrest" "Ryan Seacrest" ...
+ $ judges          : chr  "Paula Abdul; Simon Cowell; Randy Jackson" "Paula Abdul; Simon Cowell; Randy Jackson" "Paula Abdul; Simon Cowell; Randy Jackson" "Paula Abdul; Simon Cowell; Randy Jackson" ...
+ $ finals_venue    : chr  "Kodak Theatre" "Gibson Amphitheatre" "Kodak Theatre" "Kodak Theatre" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ZCTT.songs <span class="ot">&lt;-</span> <span class="fu">ZCTT.checkit</span>(ZCTT.songs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   2429 obs. of  8 variables:
+ $ season    : chr  "Season_01" "Season_01" "Season_01" "Season_01" ...
+ $ week      : chr  "20020618_top_30_group_1" "20020618_top_30_group_1" "20020618_top_30_group_1" "20020618_top_30_group_1" ...
+ $ order     : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ contestant: chr  "Tamyra Gray" "Jim Verraros" "Adriel Herrera" "Rodesia Eaves" ...
+ $ song      : chr  "And I Am Telling You I'm Not Going" "When I Fall in Love" "I'll Be" "Daydream Believer" ...
+ $ artist    : chr  "Jennifer Holliday" "Doris Day" "Edwin McCain" "The Monkees" ...
+ $ song_theme: chr  NA NA NA NA ...
+ $ result    : chr  "Advanced (1st)" "Advanced (3rd)" "Eliminated" "Eliminated" ...
+
+[1] "Column song_theme was dropped because it was missing 1656 of 2429 values."
+
+'data.frame':   2429 obs. of  7 variables:
+ $ season    : chr  "Season_01" "Season_01" "Season_01" "Season_01" ...
+ $ week      : chr  "20020618_top_30_group_1" "20020618_top_30_group_1" "20020618_top_30_group_1" "20020618_top_30_group_1" ...
+ $ order     : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ contestant: chr  "Tamyra Gray" "Jim Verraros" "Adriel Herrera" "Rodesia Eaves" ...
+ $ song      : chr  "And I Am Telling You I'm Not Going" "When I Fall in Love" "I'll Be" "Daydream Believer" ...
+ $ artist    : chr  "Jennifer Holliday" "Doris Day" "Edwin McCain" "The Monkees" ...
+ $ result    : chr  "Advanced (1st)" "Advanced (3rd)" "Eliminated" "Eliminated" ...</code></pre>
+</div>
+</div>
+</section>
+<section id="research-question" class="level3">
+<h3 class="anchored" data-anchor-id="research-question">Research Question</h3>
+<p>In examining the data that has survived the cleaning, we determine was have the data to answer the following question:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ResearchQuestion.png" title="Did the average age of the finalists impact the average viewers for the season?" class="img-fluid figure-img"></p>
+<figcaption>Research Question</figcaption>
+</figure>
+</div>
+</section>
+<section id="data-wrangling" class="level3">
+<h3 class="anchored" data-anchor-id="data-wrangling">Data Wrangling</h3>
+<p>For the purposes of this question, we will set the age of the finalist as of the last date for auditions in the season.</p>
+<p>We’ll need a table, ZCTT.research, with the following assembled and compiled data:</p>
+<table class="caption-top table">
+<caption>Table Structure for Research Question</caption>
+<colgroup>
+<col style="width: 28%">
+<col style="width: 42%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">column</th>
+<th style="text-align: left;">definition</th>
+<th style="text-align: left;">source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">Season</td>
+<td style="text-align: left;">The season of the show (1-18)</td>
+<td style="text-align: left;">will be seeded</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Viewers</td>
+<td style="text-align: left;">Average number of viewers for the season</td>
+<td style="text-align: left;">ratings$viewers_in_millions</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">Finalists</td>
+<td style="text-align: left;">Number of finalists for which age could be calculated</td>
+<td style="text-align: left;">count(finalists$contestant)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">Age</td>
+<td style="text-align: left;">Average age of a finalist</td>
+<td style="text-align: left;">(see next)</td>
+</tr>
+</tbody>
+</table>
+<p>Age is not indigenous to the data: it will have to be calculated as max(auditions$audition_date_end) - finalists$Birthday. As both fields are of type character, they will need to undergo transformation before an arithmetic operation is performed on them.</p>
+<p>Of course, this will give us only the age of the individual contestant, which will be stored into an added column into the finalists table. The ages will then be averaged for the research table.</p>
+</section>
+<section id="calculating-age-and-counting-finalists" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-age-and-counting-finalists">Calculating Age and Counting Finalists</h3>
+<p>To tie together the auditions and the finalists tables, we will use the season column, which they both share. There will be one (1) final audition date for each season, and an age for each finalist.</p>
+<p>We’ll populate an array for the final audition dates with default values first, then loop through the auditions table and replace the dates in the array as more recent dates are encountered within the auditions table. We need this array so we can populate age in the next section.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create array with placeholder dates</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ZCTT.max_aud_dates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>                        , <span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through auditions table; if we encounter a more recent date than the one stored, replace the latter with the former</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ZCTT.ThisAudition <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ZCTT.auditions)) {</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Only attempt on non-NA values</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>(<span class="fu">is.na</span>(ZCTT.auditions<span class="sc">$</span>audition_date_end[ZCTT.ThisAudition]))) {</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    ZCTT.ThisSeason <span class="ot">&lt;-</span> ZCTT.auditions<span class="sc">$</span>season[ZCTT.ThisAudition]</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">as.Date</span>(ZCTT.auditions<span class="sc">$</span>audition_date_end[ZCTT.ThisAudition]</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>                , <span class="st">"%Y-%m-%d"</span>) <span class="sc">&gt;</span> ZCTT.max_aud_dates[ZCTT.ThisSeason]) {</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>      ZCTT.max_aud_dates[ZCTT.ThisSeason] <span class="ot">&lt;-</span>  <span class="fu">as.Date</span>(ZCTT.auditions<span class="sc">$</span>audition_date_end[ZCTT.ThisAudition]</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>                                                        , <span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we will loop through the finalists table. As we assess each finalist, we will:</p>
+<ul>
+<li>calculate their age, if possible</li>
+<li>count them as a finalist for their season, if a valid age can be calculated</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create array to hold number of finalists for each season</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ZCTT.finalist_count <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                         , <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                         )</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create new column for finalists table</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>ZCTT.finalists<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># populate new column</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through the finalists table and:</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1). figure out their age as of the last audition date for that season</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2). count them for their season if their age is not zero</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ZCTT.ThisFinalist <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ZCTT.finalists)) {</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  ZCTT.LastAudition <span class="ot">&lt;-</span> ZCTT.max_aud_dates[ZCTT.finalists<span class="sc">$</span>Season[ZCTT.ThisFinalist]]</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># only attempt on non-NA values</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>(<span class="fu">is.na</span>(ZCTT.finalists<span class="sc">$</span>Birthday[ZCTT.ThisFinalist]))) {</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    ZCTT.ThisBirthday <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(ZCTT.finalists<span class="sc">$</span>Birthday[ZCTT.ThisFinalist], <span class="at">format=</span><span class="st">"%d-%b-%y"</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Performing mathematical operations with dates yields a variable of type "difftime"</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    ZCTT.ThisAgeDaysDT <span class="ot">&lt;-</span> ZCTT.LastAudition<span class="sc">-</span>ZCTT.ThisBirthday</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Need to convert "difftime" to "numeric"</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    ZCTT.ThisAgeDays <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(ZCTT.ThisAgeDaysDT)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Want to convert days to years to express age in years</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    ZCTT.ThisAge <span class="ot">&lt;-</span> ZCTT.ThisAgeDays<span class="sc">/</span><span class="fl">365.25</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># assign calculated age to finalist</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># call diagnostic_dump02 before assignment - no longer necessary</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ZCTT.dianostic_dump02 (FALSE)</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    ZCTT.finalists<span class="sc">$</span>age[ZCTT.ThisFinalist] <span class="ot">&lt;-</span> ZCTT.ThisAge</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># call diagnostic_dump02 after assignment - no longer necessary</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ZCTT.dianostic_dump02 (TRUE)</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span>(ZCTT.finalists<span class="sc">$</span>age[ZCTT.ThisFinalist]<span class="sc">==</span><span class="dv">0</span>)) {</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    ZCTT.finalist_count[ZCTT.finalists<span class="sc">$</span>Season[ZCTT.ThisFinalist]] <span class="ot">&lt;-</span> ZCTT.finalist_count[ZCTT.finalists<span class="sc">$</span>Season[ZCTT.ThisFinalist]]<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># call diagnostic_dump01 - no longer necessary</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ZCTT.diagnostic_dump01 ()</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s do a quick visual check on the values calculated in this section before we proceed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick sanity check on calculated values</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ZCTT.max_aud_dates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+"2002-05-11" "2006-01-04" "2010-02-16" "2010-06-03" "2014-06-17" "2019-09-21" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ZCTT.finalists<span class="sc">$</span>age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   18.75   21.81   21.54   24.13   29.05 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ZCTT.finalist_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.0    10.0    10.5    10.5    12.0    13.0 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You cannot have “half” of a person, as the distribution of finalists suggest. That both the mean and median equal 10.5 is resultant from there being an equal number of occurrences of 10 finalists and 11 finalists. There is no season with 10.5 finalists.</p>
+</div>
+</div>
+<p>This sanity check tells us that at least one (1) end audition date was found for each season (because the minimum date is not the initial “1970-01-01”), so age for every finalist can be approximated if their birthday is present. However, at least one (1) finalist did not have an accurate age calculated (because the minimum age is the initialize value of zero [0]), and at least one (1) season did not have any contestants with accurate ages (because the minimum finalist count is also zero [0]). We will have to consider these missing values as we proceed.</p>
+</section>
+<section id="building-the-research-table" class="level3">
+<h3 class="anchored" data-anchor-id="building-the-research-table">Building the Research Table</h3>
+<p>Now we will construct the table we designed earlier to help us answer the Research Question:</p>
+<p><strong>Did the average age of the finalists impact the average viewers of the season?</strong></p>
+<p>The construction will start with the finalist_count array, followed by the addition of other columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ZCTT.finalist_count)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ZCTT.ResearchTable) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Finalists"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># seed Season column</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ZCTT.ThisSeason <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ZCTT.ResearchTable)) {</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  ZCTT.ResearchTable<span class="sc">$</span>Season[ZCTT.ThisSeason] <span class="ot">&lt;-</span> ZCTT.ThisSeason</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># seed other columns</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable<span class="sc">$</span>Viewers <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable<span class="sc">$</span>Age <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Finalists Season Viewers Age
+1         10      1       0   0
+2         12      2       0   0
+3         12      3       0   0
+4         12      4       0   0
+5         12      5       0   0
+6         12      6       0   0
+7         12      7       0   0
+8         10      8       0   0
+9         10      9       0   0
+10        10     10       0   0
+11        13     11       0   0
+12        10     12       0   0
+13        13     13       0   0
+14        11     14       0   0
+15        10     15       0   0
+16        10     16       0   0
+17        10     17       0   0
+18         0     18       0   0</code></pre>
+</div>
+</div>
+<p>We know from earlier that at least one (1) season had no finalists with calculated ages, so they will be dropped from the Research Table before proceeding.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We can see from the above table that it is Season 18.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop seasons for which there are no finalists with calculated ages</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable <span class="ot">&lt;-</span> <span class="fu">subset</span>(ZCTT.ResearchTable</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                             , Finalists <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Finalists Season Viewers Age
+1         10      1       0   0
+2         12      2       0   0
+3         12      3       0   0
+4         12      4       0   0
+5         12      5       0   0
+6         12      6       0   0
+7         12      7       0   0
+8         10      8       0   0
+9         10      9       0   0
+10        10     10       0   0
+11        13     11       0   0
+12        10     12       0   0
+13        13     13       0   0
+14        11     14       0   0
+15        10     15       0   0
+16        10     16       0   0
+17        10     17       0   0</code></pre>
+</div>
+</div>
+<p>Now we will loop through the surviving seasons <em>(index)</em> in the Research Table. For each season, we will:</p>
+<ul>
+<li>Loop through the ratings table and calculate the average viewership</li>
+<li>Loop through the finalists table and calculate the average age of the finalists</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up loop through Research Table</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ZCTT.ThisSeason <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ZCTT.ResearchTable)) {</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># initialize variables for each season</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  ZCTT.AgeTotal <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  ZCTT.AgeAverage <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  ZCTT.ViewersTotal <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  ZCTT.EpisodeCount <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  ZCTT.ViewersAverage <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># loop through ratings table</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (ZCTT.ThisEpisode <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ZCTT.ratings)) {</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># continue only if Viewers is not NA</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>(<span class="fu">is.na</span>(ZCTT.ratings<span class="sc">$</span>viewers_in_millions[ZCTT.ThisEpisode]))) {</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># continue only if ratings &gt; 0</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (ZCTT.ratings<span class="sc">$</span>viewers_in_millions[ZCTT.ThisEpisode]<span class="sc">&gt;</span><span class="dv">0</span>) {</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># are we looking at an episode from the correct season?</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ZCTT.ratings<span class="sc">$</span>season[ZCTT.ThisEpisode]<span class="sc">==</span>ZCTT.ThisSeason) {</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>          ZCTT.EpisodeCount <span class="ot">&lt;-</span> ZCTT.EpisodeCount <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>          ZCTT.ViewersTotal <span class="ot">&lt;-</span> ZCTT.ViewersTotal <span class="sc">+</span> ZCTT.ratings<span class="sc">$</span>viewers_in_millions[ZCTT.ThisEpisode]</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proceed if both episodes were counted and viewers were totaled</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ((ZCTT.EpisodeCount<span class="sc">&gt;</span><span class="dv">0</span>)<span class="sc">&amp;</span>(ZCTT.ViewersTotal<span class="sc">&gt;</span><span class="dv">0</span>)) {</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>      ZCTT.ViewersAverage <span class="ot">&lt;-</span> ZCTT.ViewersTotal<span class="sc">/</span>ZCTT.EpisodeCount</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Original figures were in millions, so let's expand the figure to individuals</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>      ZCTT.ViewersAverage <span class="ot">&lt;-</span> ZCTT.ViewersAverage <span class="sc">*</span> <span class="dv">1000000</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Let's round so we don't have a partial person</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>      ZCTT.ViewersAverage <span class="ot">&lt;-</span> <span class="fu">round</span>(ZCTT.ViewersAverage, <span class="at">digits=</span><span class="dv">0</span>)</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assign average viewership to the Research Table</span></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    ZCTT.ResearchTable<span class="sc">$</span>Viewers[ZCTT.ThisSeason] <span class="ot">&lt;-</span> ZCTT.ViewersAverage</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loop through the finalists table</span></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (ZCTT.ThisFinalist <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ZCTT.finalists)) {</span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Is the finalist from this season?</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (ZCTT.finalists<span class="sc">$</span>Season[ZCTT.ThisFinalist]<span class="sc">==</span>ZCTT.ThisSeason) {</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We didn't count finalists with an age of zero (0), so adding one to the total age won't matter</span></span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>        ZCTT.AgeTotal <span class="ot">&lt;-</span> ZCTT.AgeTotal <span class="sc">+</span> ZCTT.finalists<span class="sc">$</span>age[ZCTT.ThisFinalist]</span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate average age </span></span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>    ZCTT.AgeAverage <span class="ot">&lt;-</span> ZCTT.AgeTotal <span class="sc">/</span> ZCTT.ResearchTable<span class="sc">$</span>Finalists[ZCTT.ThisSeason]</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Round average age to reasonable precision</span></span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>    ZCTT.AgeAverage <span class="ot">&lt;-</span> <span class="fu">round</span>(ZCTT.AgeAverage, <span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assign average age to Research Table</span></span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>    ZCTT.ResearchTable<span class="sc">$</span>Age[ZCTT.ThisSeason] <span class="ot">&lt;-</span> ZCTT.AgeAverage</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Finalists Season  Viewers    Age
+1         10      1 11908000 20.909
+2         12      2 21300000 22.629
+3         12      3 23534884 20.548
+4         12      4 25980952 23.240
+5         12      5 29463415 22.091
+6         12      6 28943171 24.030
+7         12      7 26192357 22.673
+8         10      8 24587375 23.659
+9         10      9 21985558 21.936
+10        10     10 22754103 21.296
+11        13     11 17200750 20.454
+12        10     12 13073784 20.967
+13        13     13  9787949 20.611
+14        11     14        0 20.286
+15        10     15  9088750 19.448
+16        10     16  7880000 20.650
+17        10     17  7174211 22.438</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The above code only worked as designed because the Research Table <em>(index)</em> still matched the season number. Had this not been the case, the design of the code would have been different and slightly more complicated.</p>
+</div>
+</div>
+<p>With the Research Table complete, we should drop any rows where there is no average viewership.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By this action, the <em>(index)</em> of the Research table will no longer match the American Idol season. That will have no consequence, however, as the season number itself is not germane to our Research Question: <strong>Did the average age of the finalists impact the average viewers of the season?</strong></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable <span class="ot">&lt;-</span> <span class="fu">subset</span>(ZCTT.ResearchTable</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                             , Viewers <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>ZCTT.ResearchTable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Finalists Season  Viewers    Age
+1         10      1 11908000 20.909
+2         12      2 21300000 22.629
+3         12      3 23534884 20.548
+4         12      4 25980952 23.240
+5         12      5 29463415 22.091
+6         12      6 28943171 24.030
+7         12      7 26192357 22.673
+8         10      8 24587375 23.659
+9         10      9 21985558 21.936
+10        10     10 22754103 21.296
+11        13     11 17200750 20.454
+12        10     12 13073784 20.967
+13        13     13  9787949 20.611
+15        10     15  9088750 19.448
+16        10     16  7880000 20.650
+17        10     17  7174211 22.438</code></pre>
+</div>
+</div>
+</section>
+<section id="answering-the-research-question" class="level3">
+<h3 class="anchored" data-anchor-id="answering-the-research-question">Answering The Research Question</h3>
+<p>From the dump of the Research Table above, it is plainly obvious that American Idol, as many television series do, gained popularity in its initial years and then began to lose popularity in later years. The pattern suggests an overall parabolic shape to the viewership. However, since the viewership pattern is clearly dependent on the parabolic shape, the impact of the average age of the finalists cannot be established.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># End - Tidy Tuesday exercise</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Go Roadrunners!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

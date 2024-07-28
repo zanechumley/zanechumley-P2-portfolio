@@ -1,5 +1,380 @@
 ---
 title: "Tidy Tuesday Exercise"
+author: "Zane Chumley"
+date: "2024-07-26"
+output: html_document
 ---
 
-Placeholder file for the future Tidy Tuesday exercise.
+## Tidy Tuesday - W/E 27 July 2024
+
+```{r}
+# DA 6833 02T
+# Summer 2024
+# School of Data Science
+# University of Texas at San Antonio
+
+# Zane Chumley
+# Banner ID: @01318598
+# UTSAid: wgs999
+```
+
+### Data Information
+
+Data in this dataset comes from Wikipedia. Data collected on seasons 1-18 of American Idol.
+
+The Datasets
+
++ `songs.csv` - songs that contestants sang and competed with on American Idol from seasons 1-18
++ `auditions.csv` - audition, cities, dates, and venues
++ `elimination_chart.csv` - eliminations by week. Data availability varies season-to-season based on season length and number of finalists competing
++ `finalists.csv` - information on top contestants, including birthday, hometown, and description
++ `ratings.csv` - episode ratings and views.
++ `seasons.csv` - season-level information, including season winner, runner-up, release dates, and judges
+
+### Global Function Definition
+
+Here we define any functions (subprocedures) that will be reused throughout this exercise.
+
+```{r}
+ZCTT.checkit <- function (ZCTT.checkthis) {
+  # Function ZCTT.checkit removes columns from a passed dataframe that is missing a pre-selected amount of data.  
+  # Before-and-after information about the passed dataframe is displayed.
+  # Display brief overview of passed dataframe
+  str(ZCTT.checkthis)
+  cat("\n")
+  # arbitrarily deciding columns missing information in more than 20% of rows should be discarded
+  ZCTT.cutoff <- 0.2
+  ZCTT.checkrows <- nrow(ZCTT.checkthis)
+  ZCTT.threshold <- ZCTT.cutoff*ZCTT.checkrows
+  # Remove columns exceeding threshold of missing data 
+  ZCTT.keepthis <- ZCTT.checkthis
+  ZCTT.checkcols <- ncol(ZCTT.checkthis)
+  # processing in reverse order, since removing columns changes larger indicies
+  for (ZCTT.thiscolumn in ZCTT.checkcols:1) {
+    ZCTT.colname <- colnames(ZCTT.checkthis)[ZCTT.thiscolumn]
+    ZCTT.NAs <- sum(is.na(ZCTT.checkthis[[ZCTT.thiscolumn]]))
+    if (ZCTT.NAs > ZCTT.threshold) {
+      ZCTT.keepthis <- ZCTT.keepthis[,-ZCTT.thiscolumn]
+      ZCTT.printline <- paste("Column "
+                              , ZCTT.colname
+                              , " was dropped because it was missing "
+                              , ZCTT.NAs
+                              , " of "
+                              , ZCTT.checkrows
+                              , " values."
+                              , sep=""
+                              )
+      print(ZCTT.printline)
+    }
+  }
+  cat("\n")
+  # Display brief overview of returned dataframe
+  str(ZCTT.keepthis)
+  return (ZCTT.keepthis)
+}
+ZCTT.diagnostic_dump01 <- function () {
+  # This function was diagnostic in purpose and was no longer needed once problems with looping through the finalists table were fixed.  It remains here for posterity, and posterior's, sake.
+  cat("Finalist: ", ZCTT.ThisFinalist)
+  cat("\n")
+  cat("Season: ", ZCTT.finalists$Season[ZCTT.ThisFinalist])
+  cat("\n")
+  cat("Last Audition: ",ZCTT.LastAudition)
+  cat("\n")
+  cat("Birthday: ", ZCTT.finalists$Birthday[ZCTT.ThisFinalist])
+  cat("\n")
+  cat("Birthday Good? ", !(is.na(ZCTT.finalists$Birthday[ZCTT.ThisFinalist])))
+  cat("\n")
+  if (!(is.na(ZCTT.finalists$Birthday[ZCTT.ThisFinalist]))) {
+    cat("Birthday as a Date: ", ZCTT.ThisBirthday)
+    cat("\n")
+    cat("Age in Days (timediff) : ", ZCTT.LastAudition-ZCTT.ThisBirthday)
+    cat("\n")
+    cat("Age in Years (numeric): ", ZCTT.ThisAge)
+    cat("\n")
+    cat("Age Assigned to Finalist: ", ZCTT.finalists$age[ZCTT.ThisFinalist])
+    cat("\n")
+  }
+  cat("Finalists Counted So Far for Season", ZCTT.finalists$Season[ZCTT.ThisFinalist], ": ", ZCTT.finalist_count[ZCTT.finalists$Season[ZCTT.ThisFinalist]])
+  cat("\n")
+  cat("\n")
+}
+ZCTT.dianostic_dump02 <- function (ZCTT.AgeAssigned) {
+  # This function was also diagnostic in purpose and was no longer needed once problems with looping through the finalists table were fixed.  It remains here for posterity, and posterior's, sake.
+  cat("Finalist: ", ZCTT.ThisFinalist)
+  cat("\n")
+  cat("Age in Years (numeric): ", ZCTT.ThisAge)
+  cat("\n")
+  cat("Age Assigned to Finalist: ", ZCTT.finalists$age[ZCTT.ThisFinalist])
+  cat("\n")
+  cat("Assignment Complete: ", ZCTT.AgeAssigned)
+  cat("\n")
+  if (ZCTT.AgeAssigned) {
+    cat("\n")
+  }
+}
+```
+
+### Data Importation
+
+To start, let's load the data.
+
+```{r}
+# load data from files 
+ZCTT.auditions <- read.csv("data/auditions.csv")
+ZCTT.eliminations <- read.csv("data/eliminations.csv")
+ZCTT.finalists <- read.csv("data/finalists.csv")
+ZCTT.ratings <- read.csv("data/ratings.csv")
+ZCTT.seasons <- read.csv("data/seasons.csv")
+ZCTT.songs <- read.csv("data/songs.csv")
+```
+
+### Data Overview
+
+Let's get a brief overview of the data we have.  As we go through the dataframes, if we encounter conditions in the data that may give us some grief later, we'll address them now.
+
+```{r}
+#basic data info
+ZCTT.auditions <- ZCTT.checkit(ZCTT.auditions)
+ZCTT.eliminations <- ZCTT.checkit(ZCTT.eliminations)
+ZCTT.finalists <- ZCTT.checkit(ZCTT.finalists)
+ZCTT.ratings <- ZCTT.checkit(ZCTT.ratings)
+ZCTT.seasons <- ZCTT.checkit(ZCTT.seasons)
+ZCTT.songs <- ZCTT.checkit(ZCTT.songs)
+```
+### Research Question
+
+In examining the data that has survived the cleaning, we determine was have the data to answer the following question:
+
+![Research Question](images/ResearchQuestion.png "Did the average age of the finalists impact the average viewers for the season?")
+
+### Data Wrangling 
+
+For the purposes of this question, we will set the age of the finalist as of the last date for auditions in the season.
+
+We'll need a table, ZCTT.research, with the following assembled and compiled data:
+
+| column | definition | source |
+|-------:|:-----------|:-------|
+| Season | The season of the show (1-18)| will be seeded |
+| Viewers | Average number of viewers for the season | ratings\$viewers_in_millions|
+| Finalists | Number of finalists for which age could be calculated | count(finalists\$contestant) |
+| Age | Average age of a finalist | (see next) |
+: Table Structure for Research Question
+
+Age is not indigenous to the data: it will have to be calculated as max(auditions\$audition_date_end) - finalists\$Birthday.  As both fields are of type character, they will need to undergo transformation before an arithmetic operation is performed on them.
+
+Of course, this will give us only the age of the individual contestant, which will be stored into an added column into the finalists table.  The ages will then be averaged for the research table.
+
+### Calculating Age and Counting Finalists
+
+To tie together the auditions and the finalists tables, we will use the season column, which they both share.  There will be one (1) final audition date for each season, and an age for each finalist.
+
+We'll populate an array for the final audition dates with default values first, then loop through the auditions table and replace the dates in the array as more recent dates are encountered within the auditions table.  We need this array so we can populate age in the next section.
+
+```{r}
+# Create array with placeholder dates
+ZCTT.max_aud_dates <- c(as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        , as.Date("1970-01-01", format="%Y-%m-%d")
+                        )
+# loop through auditions table; if we encounter a more recent date than the one stored, replace the latter with the former
+for (ZCTT.ThisAudition in 1:nrow(ZCTT.auditions)) {
+  # Only attempt on non-NA values
+  if (!(is.na(ZCTT.auditions$audition_date_end[ZCTT.ThisAudition]))) {
+    ZCTT.ThisSeason <- ZCTT.auditions$season[ZCTT.ThisAudition]
+    if (as.Date(ZCTT.auditions$audition_date_end[ZCTT.ThisAudition]
+                , "%Y-%m-%d") > ZCTT.max_aud_dates[ZCTT.ThisSeason]) {
+      ZCTT.max_aud_dates[ZCTT.ThisSeason] <-  as.Date(ZCTT.auditions$audition_date_end[ZCTT.ThisAudition]
+                                                        , "%Y-%m-%d")
+    }
+  }
+}
+```
+
+Now we will loop through the finalists table.  As we assess each finalist, we will:
+
++ calculate their age, if possible
++ count them as a finalist for their season, if a valid age can be calculated
+
+```{r}
+# create array to hold number of finalists for each season
+ZCTT.finalist_count <- c(0, 0, 0, 0, 0, 0, 0, 0, 0
+                         , 0, 0, 0, 0, 0, 0, 0, 0, 0
+                         )
+# create new column for finalists table
+ZCTT.finalists$age <- 0
+# populate new column
+# loop through the finalists table and:
+# 1). figure out their age as of the last audition date for that season
+# 2). count them for their season if their age is not zero
+for (ZCTT.ThisFinalist in 1:nrow(ZCTT.finalists)) {
+  ZCTT.LastAudition <- ZCTT.max_aud_dates[ZCTT.finalists$Season[ZCTT.ThisFinalist]]
+  # only attempt on non-NA values
+  if(!(is.na(ZCTT.finalists$Birthday[ZCTT.ThisFinalist]))) {
+    ZCTT.ThisBirthday <- as.Date(ZCTT.finalists$Birthday[ZCTT.ThisFinalist], format="%d-%b-%y")
+    # Performing mathematical operations with dates yields a variable of type "difftime"
+    ZCTT.ThisAgeDaysDT <- ZCTT.LastAudition-ZCTT.ThisBirthday
+    # Need to convert "difftime" to "numeric"
+    ZCTT.ThisAgeDays <- as.numeric(ZCTT.ThisAgeDaysDT)
+    # Want to convert days to years to express age in years
+    ZCTT.ThisAge <- ZCTT.ThisAgeDays/365.25
+    # assign calculated age to finalist
+    # call diagnostic_dump02 before assignment - no longer necessary
+    # ZCTT.dianostic_dump02 (FALSE)
+    ZCTT.finalists$age[ZCTT.ThisFinalist] <- ZCTT.ThisAge
+    # call diagnostic_dump02 after assignment - no longer necessary
+    # ZCTT.dianostic_dump02 (TRUE)
+  }
+  if(!(ZCTT.finalists$age[ZCTT.ThisFinalist]==0)) {
+    ZCTT.finalist_count[ZCTT.finalists$Season[ZCTT.ThisFinalist]] <- ZCTT.finalist_count[ZCTT.finalists$Season[ZCTT.ThisFinalist]]+1
+  }
+  # call diagnostic_dump01 - no longer necessary
+  # ZCTT.diagnostic_dump01 ()
+}
+```
+
+Let's do a quick visual check on the values calculated in this section before we proceed.
+
+```{r}
+# Quick sanity check on calculated values
+summary(ZCTT.max_aud_dates)
+summary(ZCTT.finalists$age)
+summary(ZCTT.finalist_count)
+```
+
+::: {.callout-warning}
+You cannot have "half" of a person, as the distribution of finalists suggest.  That both the mean and median equal 10.5 is resultant from there being an equal number of occurrences of 10 finalists and 11 finalists.  There is no season with 10.5 finalists. 
+:::
+
+This sanity check tells us that at least one (1) end audition date was found for each season (because the minimum date is not the initial "1970-01-01"), so age for every finalist can be approximated if their birthday is present.  However, at least one (1) finalist did not have an accurate age calculated (because the minimum age is the initialize value of zero [0]), and at least one (1) season did not have any contestants with accurate ages (because the minimum finalist count is also zero [0]).  We will have to consider these missing values as we proceed.
+
+### Building the Research Table
+
+Now we will construct the table we designed earlier to help us answer the Research Question:
+
+**Did the average age of the finalists impact the average viewers of the season?**
+
+The construction will start with the finalist_count array, followed by the addition of other columns. 
+
+```{r}
+ZCTT.ResearchTable <- as.data.frame(ZCTT.finalist_count)
+colnames(ZCTT.ResearchTable) <- c("Finalists")
+# seed Season column
+for (ZCTT.ThisSeason in 1:nrow(ZCTT.ResearchTable)) {
+  ZCTT.ResearchTable$Season[ZCTT.ThisSeason] <- ZCTT.ThisSeason
+}
+# seed other columns
+ZCTT.ResearchTable$Viewers <- 0
+ZCTT.ResearchTable$Age <- 0
+ZCTT.ResearchTable
+```
+
+We know from earlier that at least one (1) season had no finalists with calculated ages, so they will be dropped from the Research Table before proceeding.
+
+::: {.callout-note}
+We can see from the above table that it is Season 18.
+:::
+
+```{r}
+# Drop seasons for which there are no finalists with calculated ages
+ZCTT.ResearchTable <- subset(ZCTT.ResearchTable
+                             , Finalists > 0)
+ZCTT.ResearchTable
+```
+
+Now we will loop through the surviving seasons _(index)_ in the Research Table.  For each season, we will:
+
++ Loop through the ratings table and calculate the average viewership
++ Loop through the finalists table and calculate the average age of the finalists
+
+```{r}
+# Set up loop through Research Table
+for (ZCTT.ThisSeason in 1:nrow(ZCTT.ResearchTable)) {
+  # initialize variables for each season
+  ZCTT.AgeTotal <- 0
+  ZCTT.AgeAverage <- 0
+  ZCTT.ViewersTotal <- 0
+  ZCTT.EpisodeCount <- 0
+  ZCTT.ViewersAverage <- 0
+  # loop through ratings table
+  for (ZCTT.ThisEpisode in 1:nrow(ZCTT.ratings)) {
+    # continue only if Viewers is not NA
+    if (!(is.na(ZCTT.ratings$viewers_in_millions[ZCTT.ThisEpisode]))) {
+      # continue only if ratings > 0
+      if (ZCTT.ratings$viewers_in_millions[ZCTT.ThisEpisode]>0) {
+        # are we looking at an episode from the correct season?
+        if (ZCTT.ratings$season[ZCTT.ThisEpisode]==ZCTT.ThisSeason) {
+          ZCTT.EpisodeCount <- ZCTT.EpisodeCount + 1
+          ZCTT.ViewersTotal <- ZCTT.ViewersTotal + ZCTT.ratings$viewers_in_millions[ZCTT.ThisEpisode]
+        }
+        }
+      }
+    }
+    # proceed if both episodes were counted and viewers were totaled
+    if ((ZCTT.EpisodeCount>0)&(ZCTT.ViewersTotal>0)) {
+      ZCTT.ViewersAverage <- ZCTT.ViewersTotal/ZCTT.EpisodeCount
+      # Original figures were in millions, so let's expand the figure to individuals
+      ZCTT.ViewersAverage <- ZCTT.ViewersAverage * 1000000
+      # Let's round so we don't have a partial person
+      ZCTT.ViewersAverage <- round(ZCTT.ViewersAverage, digits=0)
+    }
+    # Assign average viewership to the Research Table
+    ZCTT.ResearchTable$Viewers[ZCTT.ThisSeason] <- ZCTT.ViewersAverage
+    # Loop through the finalists table
+    for (ZCTT.ThisFinalist in 1:nrow(ZCTT.finalists)) {
+      # Is the finalist from this season?
+      if (ZCTT.finalists$Season[ZCTT.ThisFinalist]==ZCTT.ThisSeason) {
+        # We didn't count finalists with an age of zero (0), so adding one to the total age won't matter
+        ZCTT.AgeTotal <- ZCTT.AgeTotal + ZCTT.finalists$age[ZCTT.ThisFinalist]
+      }
+    }
+    # Calculate average age 
+    ZCTT.AgeAverage <- ZCTT.AgeTotal / ZCTT.ResearchTable$Finalists[ZCTT.ThisSeason]
+    # Round average age to reasonable precision
+    ZCTT.AgeAverage <- round(ZCTT.AgeAverage, digits=3)
+    # Assign average age to Research Table
+    ZCTT.ResearchTable$Age[ZCTT.ThisSeason] <- ZCTT.AgeAverage
+  }
+ZCTT.ResearchTable
+```
+
+::: {.callout-tip}
+The above code only worked as designed because the Research Table _(index)_ still matched the season number.  Had this not been the case, the design of the code would have been different and slightly more complicated.
+:::
+
+With the Research Table complete, we should drop any rows where there is no average viewership.
+
+::: {.callout-note}
+By this action, the _(index)_ of the Research table will no longer match the American Idol season.  That will have no consequence, however, as the season number itself is not germane to our Research Question: **Did the average age of the finalists impact the average viewers of the season?**
+:::
+
+```{r}
+ZCTT.ResearchTable <- subset(ZCTT.ResearchTable
+                             , Viewers > 0)
+ZCTT.ResearchTable
+```
+
+### Answering The Research Question
+
+From the dump of the Research Table above, it is plainly obvious that American Idol, as many television series do, gained popularity in its initial years and then began to lose popularity in later years.  The pattern suggests an overall parabolic shape to the viewership.  However, since the viewership pattern is clearly dependent on the parabolic shape, the impact of the average age of the finalists cannot be established.
+
+```{r}
+# End - Tidy Tuesday exercise
+# Go Roadrunners!
+```
+
